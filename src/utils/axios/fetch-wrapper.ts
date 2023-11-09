@@ -5,7 +5,10 @@ import { toast } from "vue3-toastify"
 
 const axiosInstance = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
-  withCredentials: true,
+  withCredentials: false,
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
 })
 
 interface Access {
@@ -34,7 +37,7 @@ axiosInstance.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       toast.error(error.response.data.message)
       router.push("/login")
     }
