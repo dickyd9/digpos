@@ -98,7 +98,7 @@
         const response = await fetchWrapper.post("transaction", chooseCustomer)
         toast.success(response.message)
         emit("close", false)
-        localStorage.setItem("invoice", JSON.stringify(response))
+        localStorage.setItem("paymentCreated", JSON.stringify(response))
 
         setTimeout(() => {
           window.location.reload()

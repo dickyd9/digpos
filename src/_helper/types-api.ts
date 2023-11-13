@@ -156,3 +156,7 @@ export interface ICart {
   employeeCode: string
   amount: number
 }
+
+export interface IConfirmCart {
+  data: object[]
+}

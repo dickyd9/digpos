@@ -1,11 +1,11 @@
 {
-  "name": "enigma-vue",
+  "name": "pos-digvation",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "start": "vite --host",
+    "build": "echo $VITE_API_URL vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -74,6 +74,7 @@
     "tailwindcss": "^3.3.2",
     "typescript": "^5.1.6",
     "vite": "^4.5.0",
+    "vite-plugin-env": "^1.0.1",
     "vue-tsc": "^1.8.4"
   }
 }

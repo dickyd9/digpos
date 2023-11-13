@@ -1,0 +1,25 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pos-frontend
+spec:
+  selector:
+    matchLabels:
+      app: pos-frontend
+  template:
+    metadata:
+      labels:
+        app: pos-frontend
+    spec:
+      containers:
+        - name: pos-frontend
+          image: dxcore98/pos-frontend:v1
+          env:
+          - name: VITE_API_URL
+            value: 'http://34.28.27.187:3000'
+
+          ports:
+            - containerPort: 3003
+          imagePullPolicy: Always
+      restartPolicy: Always

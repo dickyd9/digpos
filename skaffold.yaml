@@ -1,0 +1,15 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: pos-frontend
+build:
+  artifacts:
+    - image: dxcore98/pos-frontend
+      docker:
+        dockerfile: Dockerfile
+  tagPolicy:
+    sha256: {}
+manifests:
+  rawYaml:
+    - k8s/vue.development.yaml
+    - k8s/vue.service.yaml

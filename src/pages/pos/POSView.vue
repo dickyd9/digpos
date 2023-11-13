@@ -17,12 +17,7 @@
   import { toast } from "vue3-toastify"
   import TomSelect from "@/base-components/TomSelect"
   import Tippy from "@/base-components/Tippy"
-
-  const addItemModal = ref(false)
-  const setAddItemModal = (value: boolean) => {
-    addItemModal.value = value
-  }
-  const addItemRef = ref(null)
+  import DialogConfirm from "./DialogConfirm.vue"
 
   const params = reactive({
     keyword: "",
@@ -91,24 +86,18 @@
       serviceItem.value = response?.data as IService[]
     } catch (error) {}
   }
-  const getEmployee = async () => {
-    try {
-      const response = await fetchWrapper.get("employee", params)
-      employeeList.value = response?.data as IEmployee[]
-    } catch (error) {}
-  }
 
-  const employeeList = ref<IEmployee[]>([])
-  const invoiceStorage = localStorage.getItem("invoice")
-
+  // payment Storage
+  const paymentStorage = localStorage.getItem("paymentCreated")
   let paymentCode = ref("")
-  if (invoiceStorage) {
-    const invoice = JSON.parse(invoiceStorage)
-    paymentCode = invoice?.paymentCode
+  if (paymentStorage) {
+    const payment = JSON.parse(paymentStorage)
+    paymentCode = payment?.paymentCode
   }
 
+  // Cart Proccess
   const addCart = (item: IService) => {
-    if (!invoiceStorage) {
+    if (!paymentStorage) {
       toast.error("Silahkan buat pesanan baru!")
     } else {
       const existingItem = carts.value.find(
@@ -124,7 +113,6 @@
       }
     }
   }
-
   const clearItem = (item: ICart) => {
     const index = carts.value.findIndex((itm) => itm.itemCode === item.itemCode)
 
@@ -133,17 +121,31 @@
     }
   }
 
-  const employeeCode = ref("")
-  const updateEmployeeCode = (cart: any, event: any) => {
-    cart.employeeCode = event
-  }
+  const processModal = ref(false)
+  let dataOrder = ref({})
   const pay = () => {
-    console.log(carts)
+    if (!paymentStorage) {
+      toast.error("Silahkan buat pesanan baru!")
+    } else if (!carts.value.length) {
+      toast.error("Keranjang Masih Kosong, Silahkan pilih menu!")
+    } else {
+      dataOrder.value = {
+        paymentCode,
+        carts,
+      }
+      processModal.value = true
+    }
   }
+
+  // Delete Item
+  const deleteConfirmationModal = ref(false)
+  const setDeleteConfirmationModal = (value: boolean) => {
+    deleteConfirmationModal.value = value
+  }
+  const deleteButtonRef = ref(null)
 
   onMounted(() => {
     getData()
-    getEmployee()
   })
 </script>
 
@@ -152,6 +154,7 @@
     <!-- BEGIN: Item List -->
     <div class="flex-1 col-span-12 intro-y lg:col-span-8">
       <div class="grid">
+        <!-- New Trx -->
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
             <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
@@ -239,6 +242,11 @@
         <strong>#{{ paymentCode ? paymentCode : "####" }}</strong>
       </div>
       <div class="p-2 mt-5 box grid gap-3">
+        <div
+          class="p-2 flex justify-center"
+          style="border-bottom: 1px solid #0000001a">
+          <strong>Keranjang</strong>
+        </div>
         <a
           v-for="(cart, index) in carts"
           href="#"
@@ -252,31 +260,17 @@
             <div class="ml-auto font-medium">
               Rp. {{ formatCurrency(cart.itemPrice) }}
             </div>
-            <button class="rounded border ml-2 hover:bg-black">
+            <button class="rounded border ml-2 hover:bg-red-700">
               <Lucide
                 @click="clearItem(cart)"
                 icon="X"
-                class="w-4 h-4 text-slate-500" />
+                class="w-4 h-4 text-slate-500 hover:text-white" />
             </button>
           </div>
-
-          <!-- <TomSelect
-            v-model="employeeCode"
-            style="border: 1px !important"
-            :options="{
-              placeholder: 'Pilih Karyawan',
-            }"
-            @update:modelValue="updateEmployeeCode(cart, $event)"
-            class="w-full">
-            <option
-              :value="employee.employeeCode"
-              v-for="(employee, index) in employeeList"
-              :key="index">
-              {{ employee.employeeName }}
-            </option>
-          </TomSelect> -->
         </a>
         <p v-if="!carts.length" class="text-center p-3 text-slate-300">
+          Keranjang masih kosong,
+          <br />
           Silahkan Pilih Menu
         </p>
       </div>
@@ -307,129 +301,60 @@
       <div class="flex mt-5">
         <Button
           class="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500">
-          Clear Items
+          Hapus Item
         </Button>
         <Button @click="pay" variant="primary" class="w-32 ml-auto shadow-md">
-          Charge
+          Proses
         </Button>
       </div>
     </div>
-    <!-- <Tab.Group class="col-span-12 lg:col-span-4">
-      <div class="pr-1 intro-y">
-        <div class="p-2 box">
-          <Tab.List variant="pills">
-            <Tab>
-              <Tab.Button as="button" class="w-full py-2"> Ticket </Tab.Button>
-            </Tab>
-            <Tab>
-              <Tab.Button as="button" class="w-full py-2"> Details </Tab.Button>
-            </Tab>
-          </Tab.List>
-        </div>
-      </div>
-      <Tab.Panels>
-        <Tab.Panel> </Tab.Panel>
-        <Tab.Panel>
-          <div class="p-5 mt-5 box">
-            <div
-              class="flex items-center pb-5 border-b border-slate-200 dark:border-darkmode-400">
-              <div>
-                <div class="text-slate-500">Time</div>
-                <div class="mt-1">02/06/20 02:10 PM</div>
-              </div>
-              <Lucide icon="Clock" class="w-4 h-4 ml-auto text-slate-500" />
-            </div>
-            <div
-              class="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
-              <div>
-                <div class="text-slate-500">Customer</div>
-                <div class="mt-1">{{ fakerData[0].users[0].name }}</div>
-              </div>
-              <Lucide icon="User" class="w-4 h-4 ml-auto text-slate-500" />
-            </div>
-            <div
-              class="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
-              <div>
-                <div class="text-slate-500">People</div>
-                <div class="mt-1">3</div>
-              </div>
-              <Lucide icon="Users" class="w-4 h-4 ml-auto text-slate-500" />
-            </div>
-            <div class="flex items-center pt-5">
-              <div>
-                <div class="text-slate-500">Table</div>
-                <div class="mt-1">21</div>
-              </div>
-              <Lucide icon="Mic" class="w-4 h-4 ml-auto text-slate-500" />
-            </div>
-          </div>
-        </Tab.Panel>
-      </Tab.Panels>
-    </Tab.Group> -->
     <!-- END: Ticket -->
+    <Dialog
+      :open="deleteConfirmationModal"
+      @close="
+        () => {
+          setDeleteConfirmationModal(false)
+        }
+      "
+      :initialFocus="deleteButtonRef">
+      <Dialog.Panel>
+        <div class="p-5 text-center">
+          <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
+          <div class="mt-5 text-3xl">Are you sure?</div>
+          <div class="mt-2 text-slate-500">
+            Do you really want to delete these records? <br />
+            This process cannot be undone.
+          </div>
+        </div>
+        <div class="px-5 pb-8 text-center">
+          <Button
+            variant="outline-secondary"
+            type="button"
+            @click="
+              () => {
+                setDeleteConfirmationModal(false)
+              }
+            "
+            class="w-24 mr-1">
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            type="button"
+            class="w-24"
+            ref="deleteButtonRef">
+            Delete
+          </Button>
+        </div>
+      </Dialog.Panel>
+    </Dialog>
   </div>
 
-  <!-- BEGIN: Add Item Modal -->
-  <Dialog
-    :open="addItemModal"
-    @clsoe="
-      () => {
-        setAddItemModal(false)
-      }
-    "
-    :initialFocus="addItemRef">
-    <Dialog.Panel>
-      <Dialog.Title>
-        <h2 class="mr-auto text-base font-medium">
-          {{ fakerData[0].foods[0].name }}
-        </h2>
-      </Dialog.Title>
-      <Dialog.Description class="grid grid-cols-12 gap-4 gap-y-3">
-        <div class="col-span-12">
-          <FormLabel htmlFor="pos-form-4" class="form-label">
-            Quantity
-          </FormLabel>
-          <div class="flex flex-1">
-            <Button
-              type="button"
-              class="w-12 mr-1 border-slate-200 bg-slate-100 dark:bg-darkmode-700 dark:border-darkmode-500 text-slate-500">
-              -
-            </Button>
-            <FormInput
-              id="pos-form-4"
-              type="text"
-              class="w-24 text-center"
-              placeholder="Item quantity"
-              value="2" />
-            <Button
-              type="button"
-              class="w-12 ml-1 border-slate-200 bg-slate-100 dark:bg-darkmode-700 dark:border-darkmode-500 text-slate-500">
-              +
-            </Button>
-          </div>
-        </div>
-        <div class="col-span-12">
-          <FormLabel htmlFor="pos-form-5">Notes</FormLabel>
-          <FormTextarea id="pos-form-5" placeholder="Item notes"></FormTextarea>
-        </div>
-      </Dialog.Description>
-      <Dialog.Footer class="text-right">
-        <Button
-          variant="outline-secondary"
-          type="button"
-          @click="
-            () => {
-              setAddItemModal(false)
-            }
-          "
-          class="w-24 mr-1">
-          Cancel
-        </Button>
-        <Button variant="primary" type="button" class="w-24" ref="addItemRef">
-          Add Item
-        </Button>
-      </Dialog.Footer>
-    </Dialog.Panel>
-  </Dialog>
-  <!-- END: Add Item Modal -->
+  <!-- BEGIN: Dialog Proccess -->
+  <DialogConfirm
+    :processTransaction="processModal"
+    :dataOrder="dataOrder"
+    :metaPrice="priceMeta"
+    @close="processModal = false" />
+  <!-- END: Dialog Proccess -->
 </template>

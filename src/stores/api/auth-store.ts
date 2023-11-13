@@ -28,23 +28,33 @@ export const useAuthStore = defineStore({
   getters: {},
   actions: {
     async login(user: ILoginInput) {
-      const res = await fetchWrapper.post(`auth/signIn`, user)
+      try {
+        const res = await fetchWrapper.post(`auth/signIn`, user)
 
-      this.access_token = res.access_token
-      this.isAuth = true
+        this.access_token = res.access_token
+        this.isAuth = true
 
-      localStorage.setItem(
-        "access",
-        JSON.stringify({ token: res.access_token, auth: this.isAuth })
-      )
-      router.push(this.returnUrl || "/pos")
+        localStorage.setItem(
+          "access",
+          JSON.stringify({ token: res.access_token, auth: this.isAuth })
+        )
+        await this.getUserWithToken()
+        await toast.success("Berhasil Login")
+        // Tunggu sebentar sebelum pindah ke dashboard
+        setTimeout(() => {
+          // Navigasi ke dashboard
+          router.push(this.returnUrl || "/pos")
+        }, 1000)
+      } catch (error: any) {
+        toast.error(error.response.data.message)
+      }
     },
     async getUserWithToken() {
       try {
         const user = await fetchWrapper.get(`user/profile`)
 
-        this.authUser = user.data
-        localStorage.setItem("user_data", JSON.stringify(user.data))
+        this.authUser = user
+        localStorage.setItem("user_data", JSON.stringify(user))
       } catch (error) {
         router.push("/login")
       }
@@ -64,10 +74,10 @@ export const useAuthStore = defineStore({
     },
     async logout() {
       try {
-
         // Hapus data autentikasi dari localStorage
         localStorage.removeItem("access")
         localStorage.removeItem("user_data")
+        localStorage.removeItem("invoice")
 
         // Hapus data pengguna dari toko autentikasi
         this.authUser = null

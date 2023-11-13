@@ -6,6 +6,7 @@
   import DarkModeSwitcher from "../../components/DarkModeSwitcher"
   import MainColorSwitcher from "../../components/MainColorSwitcher"
   import MobileMenu from "../../components/MobileMenu"
+  import { Menu, Tab, Dialog } from "@/base-components/Headless"
   import { useSideMenuStore } from "../../stores/side-menu"
   import {
     ProvideForceActiveMenu,
@@ -27,6 +28,8 @@
 
   import DialogNewOrder from "@/pages/pos/DialogNewOrder.vue"
   import { useAuthStore } from "@/stores/api/auth-store"
+  import Button from "@/base-components/Button"
+  import { toast } from "vue3-toastify"
 
   const authStore = useAuthStore()
 
@@ -37,6 +40,12 @@
   const updateNewOrderModal = (value: boolean) => {
     newOrderModal.value = value
   }
+
+  const logoutModal = ref(false)
+  const setLogout = (value: boolean) => {
+    logoutModal.value = value
+  }
+  const logoutButtonRef = ref(null)
 
   const route: Route = useRoute()
   const router = useRouter()
@@ -59,6 +68,11 @@
     setFormattedMenu(sideMenu.value)
   })
 
+  const userData = ref({
+    fullname: "",
+    role: "" as string | undefined,
+  })
+
   watch(
     computed(() => route.path),
     () => {
@@ -68,10 +82,20 @@
 
   onMounted(() => {
     setFormattedMenu(sideMenu.value)
+
+    setTimeout(() => {
+      ;(userData.value.fullname = `${authStore?.authUser?.firstName} ${authStore?.authUser?.lastName}`),
+        (userData.value.role = authStore?.authUser?.role)
+    }, 200)
   })
 
   const logout = () => {
-    authStore.logout()
+    logoutModal.value = false
+    toast.success("Logout Berhasil", {
+      onClose: () => {
+        authStore.logout()
+      },
+    })
   }
 </script>
 
@@ -89,12 +113,19 @@
           <li
             class="border border-zinc-400 rounded-lg flex align-center gap-4 items-center font-semibold mb-6 py-2 px-4">
             <div class="grow grid">
-              <div class="font-medium text-lg">Name</div>
-              <div class="text-xs mt-0.5">Job</div>
+              <div class="font-medium text-lg">{{ userData.fullname }}</div>
+              <div class="text-xs mt-0.5">{{ userData.role }}</div>
             </div>
 
             <div class="grow-0 rounded-full shadow-sm p-2">
-              <Tippy @click="logout" variant="primary" content="Logout">
+              <Tippy
+                @click="
+                  () => {
+                    logoutModal = true
+                  }
+                "
+                variant="primary"
+                content="Logout">
                 <Lucide icon="LogOut" class="w-4 h-4" />
               </Tippy>
             </div>
@@ -316,5 +347,42 @@
     <DialogNewOrder
       :newOrderModal="newOrderModal"
       @close="updateNewOrderModal" />
+
+    <Dialog
+      :open="logoutModal"
+      @close="
+        () => {
+          setLogout(false)
+        }
+      "
+      :initialFocus="logoutButtonRef">
+      <Dialog.Panel>
+        <div class="p-5 text-center">
+          <Lucide icon="Info" class="w-16 h-16 mx-auto mt-3 text-warning" />
+          <div class="mt-5 text-3xl">Apakah anda yakin ?</div>
+        </div>
+        <div class="px-5 pb-8 text-center">
+          <Button
+            variant="outline-secondary"
+            type="button"
+            @click="
+              () => {
+                setLogout(false)
+              }
+            "
+            class="w-24 mr-1">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            type="button"
+            class="w-24"
+            @click="logout"
+            ref="logoutButtonRef">
+            Logout
+          </Button>
+        </div>
+      </Dialog.Panel>
+    </Dialog>
   </div>
 </template>

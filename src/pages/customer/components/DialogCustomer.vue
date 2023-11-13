@@ -37,7 +37,7 @@
     customerName: "",
     customerAddress: "service",
     customerEmail: "",
-    customerDOB: "",
+    customerDOB: new Date(),
     customerContact: 0,
     customerGender: "",
   })

@@ -4,6 +4,9 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: Number(process.env.VITE_PORT) || 3003,
+  },
   build: {
     commonjsOptions: {
       include: ["tailwind.config.js", "node_modules/**"],
