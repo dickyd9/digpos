@@ -55,36 +55,26 @@
   }
 
   const updateEmployee = (employeeCode: any, cart: any) => {
-    cart.employeeCode.value = employeeCode
+    cart.employeeCode = employeeCode
   }
 
   const saveData = async () => {
-    console.log(props?.dataOrder?.carts)
-    //   if (activeTab.value === "choose") {
-    //     try {
-    //       const response = await fetchWrapper.post("transaction")
-    //       toast.success(response.message)
-    //       confirmModal.value = false
-    //       emit("close", false)
-    //       localStorage.setItem("invoice", JSON.stringify(response))
+    try {
+      const response = await fetchWrapper.put(
+        `transaction/${props?.dataOrder?.paymentCode}`,
+        { data: props?.dataOrder?.carts }
+      )
+      toast.success(response.message)
+      confirmModal.value = false
+      emit("close", false)
+      localStorage.removeItem("paymentCreated")
 
-    //       setTimeout(() => {
-    //         window.location.reload()
-    //       }, 2000)
-    //     } catch (error: any) {
-    //       toast.error(error.response?.data.message)
-    //     }
-    //   } else {
-    //     try {
-    //       const customer = await fetchWrapper.post("customer")
-    //       const response = await fetchWrapper.post("transaction", {
-    //         customerCode: customer?.detail?.customerCode,
-    //       })
-    //       toast.success(response.message)
-    //     } catch (error: any) {
-    //       toast.error(error.response?.data.message)
-    //     }
-    //   }
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000)
+    } catch (error: any) {
+      toast.error(error.response?.data.message)
+    }
   }
 
   watch(
@@ -134,7 +124,6 @@
                   style="border: 1px !important"
                   :options="{
                     placeholder: 'Pilih Karyawan',
-                    onDropdownOpen: 'close'
                   }"
                   @update:modelValue="(employeeCode: any) => {
                     updateEmployee(employeeCode, cart)
@@ -236,7 +225,7 @@
                 }
               "
               class="w-24 mr-1">
-              Cancel
+              Batal
             </Button>
             <Button
               @click="saveData"

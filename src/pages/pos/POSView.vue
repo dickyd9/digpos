@@ -11,13 +11,21 @@
   } from "@/base-components/Form"
   import Lucide from "@/base-components/Lucide"
   import { Menu, Tab, Dialog } from "@/base-components/Headless"
-  import { IService, ICart, IEmployee, ITransaction } from "@/_helper/types-api"
+  import {
+    IService,
+    ICart,
+    IEmployee,
+    ITransaction,
+    ILastTransaction,
+  } from "@/_helper/types-api"
   import fetchWrapper from "@/utils/axios/fetch-wrapper"
-  import { formatCurrency } from "@/utils/helper"
+  import { formatCurrency, formatDate } from "@/utils/helper"
   import { toast } from "vue3-toastify"
   import TomSelect from "@/base-components/TomSelect"
   import Tippy from "@/base-components/Tippy"
   import DialogConfirm from "./DialogConfirm.vue"
+  import DialogPaymentUpdate from "./DialogPaymentUpdate.vue"
+  import DialogInvoice from "./DialogPaymentUpdate.vue"
 
   const params = reactive({
     keyword: "",
@@ -103,13 +111,19 @@
       const existingItem = carts.value.find(
         (cartItem) => cartItem.itemCode === item.itemCode
       )
-
       if (existingItem) {
         // Jika item sudah ada, tambahkan kuantitasnya
         existingItem
       } else {
         // Jika item belum ada, tambahkan item baru ke dalam keranjang
-        carts.value.push({ ...item, amount: 1 })
+        carts.value.push({
+          itemCode: item.itemCode,
+          itemName: item.itemName,
+          itemPrice: item.itemPrice,
+          itemPoint: item.itemPoint,
+          employeeCode: null,
+          amount: 1,
+        })
       }
     }
   }
@@ -137,6 +151,19 @@
     }
   }
 
+  const paymentUpdateModal = ref(false)
+  const invoiceModal = ref(false)
+  let paymentUpdateData = ref<ILastTransaction>()
+  const paymentUpdate = (value: any) => {
+    paymentUpdateData.value = value as ILastTransaction
+
+    if (value?.paymentStatus === "SELECTING_PAYMENT") {
+      paymentUpdateModal.value = true
+    } else {
+      invoiceModal.value = true
+    }
+  }
+
   // Delete Item
   const deleteConfirmationModal = ref(false)
   const setDeleteConfirmationModal = (value: boolean) => {
@@ -144,8 +171,17 @@
   }
   const deleteButtonRef = ref(null)
 
+  const lastTransaction = ref<ILastTransaction[]>([])
+  const getLastTransaction = async () => {
+    try {
+      const response = await fetchWrapper.get("transaction/payment")
+      lastTransaction.value = response as ILastTransaction[]
+    } catch (error) {}
+  }
+
   onMounted(() => {
     getData()
+    getLastTransaction()
   })
 </script>
 
@@ -162,23 +198,51 @@
           <div
             class="flex w-full h-[7rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
             <a
-              v-for="(item, index) in 10"
+              @click="paymentUpdate(trx)"
+              v-for="(trx, index) in lastTransaction"
               :key="index"
-              class="block w-36 h-12 col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
-              <Tippy variant="primary" content="#INV-2127-20231108">
-                <div class="flex p-3 rounded-md box zoom-in">
-                  <div class="block font-medium truncate">
-                    <a href="" class="font-medium whitespace-nowrap">
-                      #INV-2127-20231108
+              class="block w-32 h-16 col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+              <Tippy variant="primary" :content="trx?.paymentCode">
+                <div
+                  class="h-[6.5rem] w-[17.5rem] grid grid-cols-2 grid-rows-3 p-3 rounded-md box zoom-in">
+                  <div class="font-black text-md whitespace-nowrap">
+                    ORDER #{{ trx?.paymentCode }}
+                  </div>
+
+                  <div class="text-end mt-0.5">
+                    <a
+                      :class="
+                        trx.paymentStatus === 'PAID'
+                          ? 'bg-green-600'
+                          : 'bg-amber-500'
+                      "
+                      class="text-white rounded-full px-2 py-0.5 font-medium text-xs">
+                      {{ trx.paymentStatus === "PAID" ? "Lunas" : "Proses" }}
                     </a>
+                  </div>
+
+                  <div class="row-start-2 grid">
                     <div
-                      class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                      Nama Customer
+                      class="text-slate-800 text-xs whitespace-nowrap mt-0.5">
+                      {{ trx.customerName }}
                     </div>
                     <div
                       class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                      08 - 11 - 2023
+                      {{ trx.totalAmount }} Item
                     </div>
+                    <div
+                      class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                      {{
+                        trx.totalPrice
+                          ? "Rp. " + formatCurrency(trx.totalPrice)
+                          : "-"
+                      }}
+                    </div>
+                  </div>
+
+                  <div
+                    class="row-start-3 col-start-2 flex items-end justify-end text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                    {{ formatDate(trx.createdAt, "DD-MM -YYYY - HH:MM") }}
                   </div>
                 </div>
               </Tippy>
@@ -356,5 +420,19 @@
     :dataOrder="dataOrder"
     :metaPrice="priceMeta"
     @close="processModal = false" />
+  <!-- END: Dialog Proccess -->
+
+  <!-- BEGIN: Dialog Proccess -->
+  <DialogPaymentUpdate
+    :updateModal="paymentUpdateModal"
+    :dataPayment="paymentUpdateData"
+    @close="paymentUpdateModal = false" />
+  <!-- END: Dialog Proccess -->
+
+  <!-- BEGIN: Dialog Proccess -->
+  <DialogInvoice
+    :invoiceModal="invoiceModal"
+    :dataPayment="paymentUpdateData"
+    @close="invoiceModal = false" />
   <!-- END: Dialog Proccess -->
 </template>

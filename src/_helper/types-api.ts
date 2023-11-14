@@ -81,6 +81,19 @@ export interface ITransaction {
   totalPoint: number
   totalAmount: number
   totalPrice: number
+  createdAt: Date
+}
+
+export interface ILastTransaction {
+  invoice: string
+  paymentCode: string
+  customerName: string
+  totalPrice: number
+  totalAmount: number
+  paymentMethod: string
+  paymentStatus: string
+  createdAt: string
+  item: object[]
 }
 
 // Customer Interface
@@ -153,7 +166,7 @@ export interface ICart {
   itemName: string
   itemPrice: number
   itemPoint: number
-  employeeCode: string
+  employeeCode: string | undefined | null
   amount: number
 }
 
