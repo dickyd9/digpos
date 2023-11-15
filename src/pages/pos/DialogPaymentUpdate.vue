@@ -62,7 +62,6 @@
   const paymentMethod = ref("CASH")
   const paymentInput = ref(false)
   const updatePayment = reactive({
-    paymentCode: props?.dataPayment?.paymentCode,
     paymentMethod: "",
     paymentPrice: 0,
   })
@@ -80,8 +79,8 @@
       if (!paymentInput.value && updatePayment.paymentPrice === 0) {
         toast.error("Nominal Tidak Boleh 0")
       } else {
-        const response = await fetchWrapper.put(
-          "transaction/updatePaymentStatus",
+        const response = await fetchWrapper.patch(
+          `transaction/updatePaymentStatus/${props?.dataPayment?.paymentCode}`,
           updatePayment
         )
         toast.success(response.message)

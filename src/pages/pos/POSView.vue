@@ -25,7 +25,7 @@
   import Tippy from "@/base-components/Tippy"
   import DialogConfirm from "./DialogConfirm.vue"
   import DialogPaymentUpdate from "./DialogPaymentUpdate.vue"
-  import DialogInvoice from "./DialogPaymentUpdate.vue"
+  import DialogInvoice from "./DialogInvoice.vue"
 
   const params = reactive({
     keyword: "",
@@ -97,10 +97,16 @@
 
   // payment Storage
   const paymentStorage = localStorage.getItem("paymentCreated")
-  let paymentCode = ref("")
+  let paymentData = ref({
+    paymentCode: "",
+    customerName: "",
+    transactionDate: "",
+  })
   if (paymentStorage) {
     const payment = JSON.parse(paymentStorage)
-    paymentCode = payment?.paymentCode
+    paymentData.value.paymentCode = payment?.paymentCode
+    paymentData.value.customerName = payment?.customerName
+    paymentData.value.transactionDate = payment?.transactionDate
   }
 
   // Cart Proccess
@@ -144,7 +150,7 @@
       toast.error("Keranjang Masih Kosong, Silahkan pilih menu!")
     } else {
       dataOrder.value = {
-        paymentCode,
+        ...paymentData.value,
         carts,
       }
       processModal.value = true
@@ -196,12 +202,12 @@
             <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
           </div>
           <div
-            class="flex w-full h-[9rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
+            class="flex w-full h-[8rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
             <a
               @click="paymentUpdate(trx)"
               v-for="(trx, index) in lastTransaction"
               :key="index"
-              class="block w-full h-16 col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+              class="block w-max h-max col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
               <Tippy variant="primary" :content="trx?.paymentCode">
                 <div
                   class="h-[6.5rem] w-[17.5rem] grid grid-cols-2 grid-rows-3 p-3 rounded-md box zoom-in">
@@ -303,7 +309,11 @@
     <div class="flex-none w-1/3 max-h-screen overflow-auto">
       <div class="flex justify-between p-5 box">
         <strong>No Order: </strong>
-        <strong>#{{ paymentCode ? paymentCode : "####" }}</strong>
+        <strong
+          >#{{
+            paymentData.paymentCode ? paymentData.paymentCode : "####"
+          }}</strong
+        >
       </div>
       <div class="p-2 mt-5 box grid gap-3">
         <div

@@ -44,9 +44,7 @@
       }
     ">
     <Dialog.Panel>
-      <div
-        class="p-4 mb-6 w-full"
-        style="height: 80vh; border-bottom: 1px dashed #0000004f">
+      <div class="p-4 mb-6 w-full" style="height: 80vh">
         <div
           style="
                 margin: 0 1rem;
@@ -76,18 +74,19 @@
             <tr>
               <th class="text-start pb-2 border-b border-gray-200">No</th>
               <th class="text-start pb-2 border-b border-gray-200">
-                Nama Item
+                Nama
               </th>
               <th class="text-start pb-2 border-b border-gray-200">
-                Harga Item
+                Harga
               </th>
               <th class="text-start pb-2 border-b border-gray-200">
-                Jumlah Item
+                Item
               </th>
               <th class="text-start pb-2 border-b border-gray-200">
-                Total Harga
+                Total
               </th>
             </tr>
+
             <tr v-for="(pay, index) in props?.dataPayment?.items" key="index">
               <td class="text-start py-2 border-b border-gray-200">
                 {{ index + 1 }}
@@ -98,14 +97,54 @@
               <td class="text-start py-2 border-b border-gray-200">
                 {{ "Rp. " + formatCurrency(pay.itemPrice) }}
               </td>
-              <td class="text-start py-2 border-b border-gray-200">
+              <td class="text-center py-2 border-b border-gray-200">
                 {{ pay.itemAmount }}
               </td>
               <td class="text-start py-2 border-b border-gray-200">
                 {{ "Rp. " + formatCurrency(pay.totalPrice) }}
               </td>
             </tr>
+
+            <tr>
+              <td class="text-start font-bold py-2 border-b border-gray-200">Jumlah</td>
+              <td class="text-start font-bold py-2 border-b border-gray-200"></td>
+              <td class="text-start font-bold py-2 border-b border-gray-200"></td>
+              <td class="text-center font-bold py-2 border-b border-gray-200">{{ props.dataPayment?.totalAmount }}</td>
+              <td class="text-start font-bold py-2 border-b border-gray-200">{{ "Rp. " + formatCurrency(props.dataPayment?.totalPrice) }}</td>
+            </tr>
           </table>
+
+          <div
+            class="grid justify-end text-end my-6 py-3"
+            style="
+              border-bottom: 1px dashed #0000004f;
+              border-top: 1px dashed #0000004f;
+            ">
+            <div class="grid grid-cols-2 gap-3">
+              <p class="font-bold">Pembayaran :</p>
+              <p class="ml-auto">
+                {{ props.dataPayment?.paymentMethod }}
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <p class="font-bold">Jumlah Point :</p>
+              <p class="ml-auto">
+                {{ props.dataPayment?.totalPoint }}
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <p class="font-bold">Jumlah Bayar :</p>
+              <p class="ml-auto">
+                Rp. {{ formatCurrency(props.dataPayment?.paymentAmount) }}
+              </p>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <p class="font-bold">Kembali :</p>
+              <p class="ml-auto">
+                Rp. {{ formatCurrency(props.dataPayment?.changeAmount) }}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </Dialog.Panel>

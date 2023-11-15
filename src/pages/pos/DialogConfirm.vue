@@ -155,12 +155,12 @@
             <tr>
               <th>Nama Customer</th>
               <td>:</td>
-              <td>asdsa</td>
+              <td>{{props?.dataOrder?.customerName}}</td>
             </tr>
             <tr>
               <th>Tanggal Transaksi</th>
               <td>:</td>
-              <td>{{ formatDate(props.dataOrder?.date, "DD - MMMM - YY") }}</td>
+              <td>{{ formatDate(props.dataOrder?.transactionDate, "DD - MMMM - YY") }}</td>
             </tr>
           </table>
           <table class="w-full text-left">
