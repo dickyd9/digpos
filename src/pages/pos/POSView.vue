@@ -196,12 +196,12 @@
             <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
           </div>
           <div
-            class="flex w-full h-[7rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
+            class="flex w-full h-[9rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
             <a
               @click="paymentUpdate(trx)"
               v-for="(trx, index) in lastTransaction"
               :key="index"
-              class="block w-32 h-16 col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+              class="block w-full h-16 col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
               <Tippy variant="primary" :content="trx?.paymentCode">
                 <div
                   class="h-[6.5rem] w-[17.5rem] grid grid-cols-2 grid-rows-3 p-3 rounded-md box zoom-in">
