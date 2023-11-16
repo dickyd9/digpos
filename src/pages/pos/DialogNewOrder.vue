@@ -116,6 +116,12 @@
           customerCode: customer?.detail?.customerCode,
         })
         toast.success(response.message)
+        emit("close", false)
+        localStorage.setItem("paymentCreated", JSON.stringify(response))
+
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
       } catch (error: any) {
         toast.error(error.response?.data.message)
       }
