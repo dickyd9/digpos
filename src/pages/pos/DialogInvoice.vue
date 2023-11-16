@@ -73,18 +73,10 @@
           <table class="mt-6 table-auto hover:table-fixed">
             <tr>
               <th class="text-start pb-2 border-b border-gray-200">No</th>
-              <th class="text-start pb-2 border-b border-gray-200">
-                Nama
-              </th>
-              <th class="text-start pb-2 border-b border-gray-200">
-                Harga
-              </th>
-              <th class="text-start pb-2 border-b border-gray-200">
-                Item
-              </th>
-              <th class="text-start pb-2 border-b border-gray-200">
-                Total
-              </th>
+              <th class="text-start pb-2 border-b border-gray-200">Nama</th>
+              <th class="text-start pb-2 border-b border-gray-200">Harga</th>
+              <th class="text-start pb-2 border-b border-gray-200">Item</th>
+              <th class="text-start pb-2 border-b border-gray-200">Total</th>
             </tr>
 
             <tr v-for="(pay, index) in props?.dataPayment?.items" key="index">
@@ -106,11 +98,19 @@
             </tr>
 
             <tr>
-              <td class="text-start font-bold py-2 border-b border-gray-200">Jumlah</td>
-              <td class="text-start font-bold py-2 border-b border-gray-200"></td>
-              <td class="text-start font-bold py-2 border-b border-gray-200"></td>
-              <td class="text-center font-bold py-2 border-b border-gray-200">{{ props.dataPayment?.totalAmount }}</td>
-              <td class="text-start font-bold py-2 border-b border-gray-200">{{ "Rp. " + formatCurrency(props.dataPayment?.totalPrice) }}</td>
+              <td class="text-start font-bold py-2 border-b border-gray-200">
+                Jumlah
+              </td>
+              <td
+                class="text-start font-bold py-2 border-b border-gray-200"></td>
+              <td
+                class="text-start font-bold py-2 border-b border-gray-200"></td>
+              <td class="text-center font-bold py-2 border-b border-gray-200">
+                {{ props.dataPayment?.totalAmount }}
+              </td>
+              <td class="text-start font-bold py-2 border-b border-gray-200">
+                {{ "Rp. " + formatCurrency(props.dataPayment?.totalPrice) }}
+              </td>
             </tr>
           </table>
 
@@ -139,9 +139,14 @@
               </p>
             </div>
             <div class="grid grid-cols-2 gap-3">
-              <p class="font-bold">Kembali :</p>
+              <p class="font-bold">Jumlah Kembali :</p>
               <p class="ml-auto">
-                Rp. {{ formatCurrency(props.dataPayment?.changeAmount) }}
+                Rp.
+                {{
+                  props?.dataPayment?.changeAmount != 0
+                    ? formatCurrency(props?.dataPayment?.changeAmount)
+                    : props?.dataPayment?.changeAmount
+                }}
               </p>
             </div>
           </div>
