@@ -23,6 +23,7 @@
   import { toast } from "vue3-toastify"
   import { WindowScrollController } from "@fullcalendar/vue3"
   import { formatCurrency, formatDate } from "@/utils/helper"
+  import DialogInvoice from "./DialogInvoice.vue"
 
   const props = defineProps({
     updateModal: Boolean,
@@ -86,6 +87,10 @@
         toast.success(response.message)
         confirmModal.value = false
         emit("close", false)
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
       }
     } catch (error: any) {
       toast.error(error.response?.data.message)
@@ -180,84 +185,10 @@
         </Button>
       </Dialog.Footer>
       <!-- BEGIN: Invoice -->
-      <Dialog
-        :open="invoiceModal"
-        @close="
-          () => {
-            setInvoiceModal(false)
-          }
-        ">
-        <Dialog.Panel>
-          <div
-            class="p-4 mb-6 w-full"
-            style="height: 80vh; border-bottom: 1px dashed #0000004f">
-            <div
-              style="
-                margin: 0 1rem;
-                width: 100%
-                font-size: 1.7rem;
-                font-weight: 600;
-                border-bottom: 1px dashed #0000004f;
-              "
-              class="p-3 text-center">
-              <p>Nama Perusahaan / Bisnis</p>
-              <p class="text-gray-400 font-light">Alamat</p>
-            </div>
-            <div class="mt-4 mx-[1rem] grid">
-              <div class="flex justify-between">
-                <div class="font-bold">DATE</div>
-                <div class="text-end">
-                  {{
-                    formatDate(props?.dataPayment?.paymentDate, "DD MMMM YYYY")
-                  }}
-                </div>
-              </div>
-
-              <div class="row-start-2 flex justify-between">
-                <div class="font-bold">INVOICE</div>
-                <div class="text-end">#{{ props?.dataPayment?.invoice }}</div>
-              </div>
-
-              <table class="mt-6 table-auto hover:table-fixed">
-                <tr>
-                  <th class="text-start pb-2 border-b border-gray-200">No</th>
-                  <th class="text-start pb-2 border-b border-gray-200">
-                    Nama Item
-                  </th>
-                  <th class="text-start pb-2 border-b border-gray-200">
-                    Harga Item
-                  </th>
-                  <th class="text-start pb-2 border-b border-gray-200">
-                    Jumlah Item
-                  </th>
-                  <th class="text-start pb-2 border-b border-gray-200">
-                    Total Harga
-                  </th>
-                </tr>
-                <tr
-                  v-for="(pay, index) in props?.dataPayment?.items"
-                  key="index">
-                  <td class="text-start py-2 border-b border-gray-200">
-                    {{ index + 1 }}
-                  </td>
-                  <td class="text-start py-2 border-b border-gray-200">
-                    {{ pay.itemName }}
-                  </td>
-                  <td class="text-start py-2 border-b border-gray-200">
-                    {{ "Rp. " + formatCurrency(pay.itemPrice) }}
-                  </td>
-                  <td class="text-start py-2 border-b border-gray-200">
-                    {{ pay.itemAmount }}
-                  </td>
-                  <td class="text-start py-2 border-b border-gray-200">
-                    {{ "Rp. " + formatCurrency(pay.totalPrice) }}
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </div>
-        </Dialog.Panel>
-      </Dialog>
+      <DialogInvoice
+        :invoiceModal="invoiceModal"
+        :dataPayment="props.dataPayment"
+        @close="invoiceModal = false" />
       <!-- END: Invoice -->
 
       <!-- BEGIN: Confirm -->

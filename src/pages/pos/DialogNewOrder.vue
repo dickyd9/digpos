@@ -117,6 +117,7 @@
         })
         toast.success(response.message)
         emit("close", false)
+        emit("update")
         localStorage.setItem("paymentCreated", JSON.stringify(response))
 
         setTimeout(() => {

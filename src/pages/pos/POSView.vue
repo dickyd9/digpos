@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import _ from "lodash"
+  import _, { debounce } from "lodash"
   import { onMounted, reactive, ref, watch } from "vue"
   import fakerData from "@/utils/faker"
   import Button from "@/base-components/Button"
@@ -43,7 +43,7 @@
     getData()
   }
   const serviceItem = ref<IService[]>([])
-  const carts = ref<ICart[]>([])
+  let carts = ref<ICart[]>([])
   const transactionData = ref<ITransaction>()
 
   const priceMeta = ref({
@@ -183,6 +183,10 @@
       const response = await fetchWrapper.get("transaction/payment")
       lastTransaction.value = response as ILastTransaction[]
     } catch (error) {}
+  }
+
+  const deleteAllItem = () => {
+    carts.value = [] as ICart[]
   }
 
   onMounted(() => {
@@ -374,6 +378,7 @@
       </div>
       <div class="flex mt-5">
         <Button
+          @click="deleteAllItem"
           class="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500">
           Hapus Item
         </Button>
@@ -436,7 +441,8 @@
   <DialogPaymentUpdate
     :updateModal="paymentUpdateModal"
     :dataPayment="paymentUpdateData"
-    @close="paymentUpdateModal = false" />
+    @close="paymentUpdateModal = false"
+    />
   <!-- END: Dialog Proccess -->
 
   <!-- BEGIN: Dialog Proccess -->

@@ -54,8 +54,19 @@
                 border-bottom: 1px dashed #0000004f;
               "
           class="p-3 text-center">
-          <p>Nama Perusahaan / Bisnis</p>
-          <p class="text-gray-400 font-light">Alamat</p>
+          <p
+            style="
+              font-size: 1.2rem;
+              font-weight: 600;
+              border-bottom: 1px solid #00000015;
+              padding-bottom: 6px;
+            ">
+            Nova Beauty Salon & Spa
+          </p>
+          <p class="text-gray-400 font-light" style="font-size: 0.8rem">
+            Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang,
+            Banten - 15730
+          </p>
         </div>
         <div class="mt-4 mx-[1rem] grid">
           <div class="flex justify-between">
@@ -135,7 +146,11 @@
             <div class="grid grid-cols-2 gap-3">
               <p class="font-bold">Jumlah Bayar :</p>
               <p class="ml-auto">
-                Rp. {{ formatCurrency(props.dataPayment?.paymentAmount) }}
+                Rp. {{
+                  props.dataPayment?.paymentAmount === 0
+                    ? props.dataPayment?.paymentAmount
+                    : formatCurrency(props.dataPayment?.paymentAmount)
+                }}
               </p>
             </div>
             <div class="grid grid-cols-2 gap-3">
