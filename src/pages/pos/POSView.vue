@@ -90,8 +90,8 @@
 
   const getData = async () => {
     try {
-      const response = await fetchWrapper.get("item", params)
-      serviceItem.value = response?.data as IService[]
+      const response = await fetchWrapper.get("item/menu", params)
+      serviceItem.value = response as IService[]
     } catch (error) {}
   }
 
@@ -441,8 +441,7 @@
   <DialogPaymentUpdate
     :updateModal="paymentUpdateModal"
     :dataPayment="paymentUpdateData"
-    @close="paymentUpdateModal = false"
-    />
+    @close="paymentUpdateModal = false" />
   <!-- END: Dialog Proccess -->
 
   <!-- BEGIN: Dialog Proccess -->
