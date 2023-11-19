@@ -8,16 +8,19 @@ import "vue3-toastify/dist/index.css"
 
 import Vue3Datatable from "@bhplugin/vue3-datatable"
 import "@bhplugin/vue3-datatable/dist/style.css"
-import piniaPersist from 'pinia-plugin-persist'
+import piniaPersist from "pinia-plugin-persist"
+import "./registerServiceWorker"
+import { PDFPlugin } from "vue3-pdfmake"
 
 const pinia = createPinia()
 pinia.use(piniaPersist)
 
 createApp(App)
   .use(router)
+  .use(PDFPlugin)
   .use(pinia)
   .use(Vue3Toastify, {
     autoClose: 2000,
   } as ToastContainerOptions)
-  .component('Vue3Datatable', Vue3Datatable)
+  .component("Vue3Datatable", Vue3Datatable)
   .mount("#app")

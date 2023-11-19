@@ -1,12 +1,11 @@
 {
   "name": "pos-digvation",
-  "private": true,
   "version": "0.0.1",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "vite --host",
     "build": "echo $VITE_API_URL vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite --host"
   },
   "dependencies": {
     "@bhplugin/vue3-datatable": "^1.1.1",
@@ -31,6 +30,7 @@
     "dropzone": "^6.0.0-beta.2",
     "flat": "^5.0.2",
     "highlight.js": "^11.6.0",
+    "html-to-pdfmake": "^2.5.1",
     "js-beautify": "^1.14.6",
     "leaflet": "^1.9.3",
     "leaflet.markercluster": "^1.5.3",
@@ -42,6 +42,7 @@
     "pinia": "^2.0.23",
     "pinia-plugin-persist": "^1.0.0",
     "pinia-plugin-persistedstate": "^3.2.0",
+    "register-service-worker": "^1.7.2",
     "simplebar": "^5.3.9",
     "tabulator-tables": "^5.3.4",
     "tiny-slider": "^2.9.4",
@@ -51,6 +52,7 @@
     "vue": "^3.3.4",
     "vue-query": "^1.26.0",
     "vue-router": "^4.1.6",
+    "vue3-pdfmake": "^2.2.0",
     "vue3-toastify": "^0.1.14",
     "xlsx": "^0.18.5",
     "zoom-vanilla.js": "^2.0.6"
@@ -64,9 +66,11 @@
     "@types/leaflet.markercluster": "^1.5.1",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.8.7",
+    "@types/pdfmake": "^0.2.8",
     "@types/tabulator-tables": "^5.4.8",
     "@types/toastify-js": "^1.11.1",
     "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/cli-plugin-pwa": "~5.0.0",
     "autoprefixer": "^10.4.14",
     "lodash": "^4.17.21",
     "postcss": "^8.4.25",
@@ -78,6 +82,9 @@
     "typescript": "^5.1.6",
     "vite": "^4.5.0",
     "vite-plugin-env": "^1.0.1",
-    "vue-tsc": "^1.8.4"
-  }
+    "vite-plugin-pwa": "^0.16.7",
+    "vue-tsc": "^1.8.4",
+    "workbox-precaching": "^7.0.0"
+  },
+  "type": "module"
 }

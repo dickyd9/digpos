@@ -165,8 +165,6 @@
 
     if (value?.paymentStatus === "SELECTING_PAYMENT") {
       paymentUpdateModal.value = true
-    } else {
-      invoiceModal.value = true
     }
   }
 
@@ -252,7 +250,12 @@
 
                   <div
                     class="row-start-3 col-start-2 flex items-end justify-end text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                    {{ formatDate(trx.createdAt, "DD-MM -YYYY - HH:MM") }}
+                    {{
+                      formatDate(
+                        trx.paymentDate.toLocaleString(),
+                        "YYYY-MMMM-DD HH:mm"
+                      )
+                    }}
                   </div>
                 </div>
               </Tippy>

@@ -92,7 +92,7 @@ export interface ILastTransaction {
   totalAmount: number
   paymentMethod: string
   paymentStatus: string
-  createdAt: string
+  paymentDate: string
   item: object[]
 }
 
