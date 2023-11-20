@@ -9,7 +9,6 @@ import "vue3-toastify/dist/index.css"
 import Vue3Datatable from "@bhplugin/vue3-datatable"
 import "@bhplugin/vue3-datatable/dist/style.css"
 import piniaPersist from "pinia-plugin-persist"
-import "./registerServiceWorker"
 import { PDFPlugin } from "vue3-pdfmake"
 
 const pinia = createPinia()
