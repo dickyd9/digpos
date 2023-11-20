@@ -161,9 +161,13 @@
   const invoiceModal = ref(false)
   let paymentUpdateData = ref<ILastTransaction>()
   const paymentUpdate = (value: any) => {
-    if (value?.paymentStatus !== "PAID") {
-      paymentUpdateData.value = value as ILastTransaction
-      paymentUpdateModal.value = true
+    try {
+      if (value?.paymentStatus !== "PAID") {
+        paymentUpdateData.value = value as ILastTransaction
+        paymentUpdateModal.value = true
+      }
+    } catch (error: any) {
+      console.log(error)
     }
   }
 
