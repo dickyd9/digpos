@@ -161,13 +161,9 @@
   const invoiceModal = ref(false)
   let paymentUpdateData = ref<ILastTransaction>()
   const paymentUpdate = (value: any) => {
-    try {
-      if (value?.paymentStatus !== "PAID") {
-        paymentUpdateData.value = value as ILastTransaction
-        paymentUpdateModal.value = true
-      }
-    } catch (error: any) {
-      console.log(error)
+    if (value?.paymentStatus !== "PAID") {
+      paymentUpdateData.value = value as ILastTransaction
+      paymentUpdateModal.value = true
     }
   }
 
@@ -204,7 +200,7 @@
         <!-- New Trx -->
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
-            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2> {{ paymentUpdateModal }}
+            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2> 
           </div>
           <div
             class="flex w-full h-[8rem] overflow-x-auto overflow-y-hidden gap-3 my-3">

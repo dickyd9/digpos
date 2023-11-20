@@ -75,311 +75,311 @@
     }
   }
 
-  import * as pdfMake from "pdfmake/build/pdfmake"
-  import * as pdfFonts from "pdfmake/build/vfs_fonts"
-  (pdfMake as any).vfs = pdfFonts.pdfMake.vfs
+  // import * as pdfMake from "pdfmake/build/pdfmake"
+  // import * as pdfFonts from "pdfmake/build/vfs_fonts"
+  // (pdfMake as any).vfs = pdfFonts.pdfMake.vfs
 
-  const onGenPDF = async (data: any) => {
-    try {
-      const items = data?.items
-      const bodyContent: Object[] = []
+  // const onGenPDF = async (data: any) => {
+  //   try {
+  //     const items = data?.items
+  //     const bodyContent: Object[] = []
 
-      if (items && items.length > 0) {
-        items.forEach((item: any, index: any) => {
-          const { itemName, itemPrice, itemAmount, totalPrice } = item
+  //     if (items && items.length > 0) {
+  //       items.forEach((item: any, index: any) => {
+  //         const { itemName, itemPrice, itemAmount, totalPrice } = item
 
-          const total = itemPrice * itemAmount
+  //         const total = itemPrice * itemAmount
 
-          bodyContent.push([
-            {
-              text: itemName,
-              border: [false, false, false, true],
-            },
-            {
-              text: "Rp. " + formatCurrency(itemPrice),
-              alignment: "left",
-              border: [false, false, false, true],
-            },
-            {
-              text: itemAmount,
-              alignment: "center",
-              border: [false, false, false, true],
-            },
-            {
-              text: "Rp. " + formatCurrency(totalPrice),
-              alignment: "right",
-              border: [false, false, false, true],
-            },
-          ])
-        })
-      }
+  //         bodyContent.push([
+  //           {
+  //             text: itemName,
+  //             border: [false, false, false, true],
+  //           },
+  //           {
+  //             text: "Rp. " + formatCurrency(itemPrice),
+  //             alignment: "left",
+  //             border: [false, false, false, true],
+  //           },
+  //           {
+  //             text: itemAmount,
+  //             alignment: "center",
+  //             border: [false, false, false, true],
+  //           },
+  //           {
+  //             text: "Rp. " + formatCurrency(totalPrice),
+  //             alignment: "right",
+  //             border: [false, false, false, true],
+  //           },
+  //         ])
+  //       })
+  //     }
 
-      const docDefinition = {
-        content: [
-          // Invoice
-          {
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                return 0.2
-              },
-            },
-            fontSize: 4,
-            table: {
-              widths: ["50%", "50%"],
-              body: [
-                [
-                  {
-                    text: "No. Invoice",
-                    bold: true,
-                    border: [false, true, false, false],
-                    margin: [-5, 0, -5, 0],
-                  },
-                  {
-                    text: "#" + data?.invoice,
-                    alignment: "right",
-                    border: [false, true, false, false],
-                    margin: [-5, 0, -5, 0],
-                  },
-                ],
-              ],
-            },
-          },
-          {
-            layout: "noBorders",
-            fontSize: 4,
-            table: {
-              widths: ["50%", "50%"],
-              body: [
-                [
-                  { text: "Tanggal", bold: true, margin: [0, -3, 0, 5] },
-                  {
-                    text: formatDate(data?.paymentDate, "DD MMMM YYYY"),
-                    alignment: "right",
-                    margin: [0, -3, 0, 5],
-                  },
-                ],
-              ],
-            },
-          },
-          // Item
-          {
-            fontSize: 4,
-            table: {
-              headerRows: 1,
-              widths: ["*", "20%", "13%", "25%"],
+  //     const docDefinition = {
+  //       content: [
+  //         // Invoice
+  //         {
+  //           layout: {
+  //             hLineWidth: function (i: any, node: any) {
+  //               return 0.2
+  //             },
+  //           },
+  //           fontSize: 4,
+  //           table: {
+  //             widths: ["50%", "50%"],
+  //             body: [
+  //               [
+  //                 {
+  //                   text: "No. Invoice",
+  //                   bold: true,
+  //                   border: [false, true, false, false],
+  //                   margin: [-5, 0, -5, 0],
+  //                 },
+  //                 {
+  //                   text: "#" + data?.invoice,
+  //                   alignment: "right",
+  //                   border: [false, true, false, false],
+  //                   margin: [-5, 0, -5, 0],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //         {
+  //           layout: "noBorders",
+  //           fontSize: 4,
+  //           table: {
+  //             widths: ["50%", "50%"],
+  //             body: [
+  //               [
+  //                 { text: "Tanggal", bold: true, margin: [0, -3, 0, 5] },
+  //                 {
+  //                   text: formatDate(data?.paymentDate, "DD MMMM YYYY"),
+  //                   alignment: "right",
+  //                   margin: [0, -3, 0, 5],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //         // Item
+  //         {
+  //           fontSize: 4,
+  //           table: {
+  //             headerRows: 1,
+  //             widths: ["*", "20%", "13%", "25%"],
 
-              body: [
-                [
-                  {
-                    text: "Item",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: "Harga",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: "Jumlah",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: "Total Harga",
-                    bold: true,
-                    alignment: "right",
-                    border: [false, false, false, true],
-                  },
-                ],
-                ...bodyContent.map((item) => Object.values(item)),
-                [
-                  {
-                    text: "",
-                    alignment: "center",
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: "Total",
-                    alignment: "left",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: data?.totalAmount,
-                    alignment: "center",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                  {
-                    text: "Rp ." + formatCurrency(data?.totalPrice),
-                    alignment: "right",
-                    bold: true,
-                    border: [false, false, false, true],
-                  },
-                ],
-              ],
-            },
-            layout: {
-              hLineWidth: function (i: any, node: any) {
-                if (i === 0 || i === node.table.body.length) {
-                  return 0
-                }
-                return 0.2
-              },
-            },
-          },
-          // Meta Price
-          {
-            fontSize: 4,
-            layout: "noBorders",
-            table: {
-              headerRows: 1,
-              widths: ["30%", "20%", "30%", "20%"],
+  //             body: [
+  //               [
+  //                 {
+  //                   text: "Item",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: "Harga",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: "Jumlah",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: "Total Harga",
+  //                   bold: true,
+  //                   alignment: "right",
+  //                   border: [false, false, false, true],
+  //                 },
+  //               ],
+  //               ...bodyContent.map((item) => Object.values(item)),
+  //               [
+  //                 {
+  //                   text: "",
+  //                   alignment: "center",
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: "Total",
+  //                   alignment: "left",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: data?.totalAmount,
+  //                   alignment: "center",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //                 {
+  //                   text: "Rp ." + formatCurrency(data?.totalPrice),
+  //                   alignment: "right",
+  //                   bold: true,
+  //                   border: [false, false, false, true],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //           layout: {
+  //             hLineWidth: function (i: any, node: any) {
+  //               if (i === 0 || i === node.table.body.length) {
+  //                 return 0
+  //               }
+  //               return 0.2
+  //             },
+  //           },
+  //         },
+  //         // Meta Price
+  //         {
+  //           fontSize: 4,
+  //           layout: "noBorders",
+  //           table: {
+  //             headerRows: 1,
+  //             widths: ["30%", "20%", "30%", "20%"],
 
-              body: [
-                [
-                  "",
-                  "",
-                  {
-                    text: "Sub Total :",
-                    bold: true,
-                    alignment: "right",
-                    margin: [0, 5, 0, -3],
-                  },
-                  {
-                    text: "Rp. " + formatCurrency(data?.totalPrice),
-                    alignment: "right",
-                    margin: [0, 5, 0, -3],
-                  },
-                ],
-                [
-                  "",
-                  "",
-                  {
-                    text: "Total Point :",
-                    bold: true,
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                  {
-                    text: data?.totalPoint,
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                ],
-                [
-                  "",
-                  "",
-                  {
-                    text: "Jumlah Bayar :",
-                    bold: true,
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                  {
-                    text: "Rp. " + formatCurrency(data?.paymentAmount),
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                ],
-                [
-                  "",
-                  "",
-                  {
-                    text: "Jumlah Kembali :",
-                    bold: true,
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                  {
-                    text: "Rp. " + formatCurrency(data?.changeAmount),
-                    alignment: "right",
-                    margin: [0, 0, 0, -3],
-                  },
-                ],
-              ],
-            },
-          },
-        ],
-        header: [
-          {
-            layout: "noBorders",
-            table: {
-              widths: ["100%"],
-              body: [
-                [
-                  {
-                    text: "Nova Beauty Salon & Spa",
-                    fontSize: 6,
-                    bold: true,
-                    alignment: "center",
-                    border: [false, false, false, true],
-                  },
-                ],
-              ],
-            },
-            margin: [0, 10, 0, 0],
-          },
-          // Alamat
-          {
-            layout: "noBorders",
-            table: {
-              widths: ["100%"],
-              body: [
-                [
-                  {
-                    text: "Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang, Banten - 15730",
-                    fontSize: 4,
-                    color: "#a8a8a8",
-                    bold: false,
-                    alignment: "center",
-                    border: [false, false, false, true],
-                  },
-                ],
-              ],
-            },
-          },
-          // No Teplon
-          {
-            layout: "noBorders",
-            table: {
-              widths: ["100%"],
-              body: [
-                [
-                  {
-                    text: "0899288299",
-                    fontSize: 4,
-                    color: "#a8a8a8",
-                    bold: false,
-                    alignment: "center",
-                    margin: [0, -3, 0, 0],
-                  },
-                ],
-              ],
-            },
-          },
-        ],
-        pageMargins: [10, 40, 10, 40],
-        pageSize: {
-          width: 165,
-          // height: 725,
-          height: "auto",
-        },
-      }
-      const pdf = pdfMake.createPdf(docDefinition)
-      pdf.getBlob(async (blob: Blob) => {
-        const formData = new FormData()
-        formData.append("file", blob, `${data?.invoice}.pdf`)
+  //             body: [
+  //               [
+  //                 "",
+  //                 "",
+  //                 {
+  //                   text: "Sub Total :",
+  //                   bold: true,
+  //                   alignment: "right",
+  //                   margin: [0, 5, 0, -3],
+  //                 },
+  //                 {
+  //                   text: "Rp. " + formatCurrency(data?.totalPrice),
+  //                   alignment: "right",
+  //                   margin: [0, 5, 0, -3],
+  //                 },
+  //               ],
+  //               [
+  //                 "",
+  //                 "",
+  //                 {
+  //                   text: "Total Point :",
+  //                   bold: true,
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //                 {
+  //                   text: data?.totalPoint,
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //               ],
+  //               [
+  //                 "",
+  //                 "",
+  //                 {
+  //                   text: "Jumlah Bayar :",
+  //                   bold: true,
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //                 {
+  //                   text: "Rp. " + formatCurrency(data?.paymentAmount),
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //               ],
+  //               [
+  //                 "",
+  //                 "",
+  //                 {
+  //                   text: "Jumlah Kembali :",
+  //                   bold: true,
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //                 {
+  //                   text: "Rp. " + formatCurrency(data?.changeAmount),
+  //                   alignment: "right",
+  //                   margin: [0, 0, 0, -3],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //       ],
+  //       header: [
+  //         {
+  //           layout: "noBorders",
+  //           table: {
+  //             widths: ["100%"],
+  //             body: [
+  //               [
+  //                 {
+  //                   text: "Nova Beauty Salon & Spa",
+  //                   fontSize: 6,
+  //                   bold: true,
+  //                   alignment: "center",
+  //                   border: [false, false, false, true],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //           margin: [0, 10, 0, 0],
+  //         },
+  //         // Alamat
+  //         {
+  //           layout: "noBorders",
+  //           table: {
+  //             widths: ["100%"],
+  //             body: [
+  //               [
+  //                 {
+  //                   text: "Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang, Banten - 15730",
+  //                   fontSize: 4,
+  //                   color: "#a8a8a8",
+  //                   bold: false,
+  //                   alignment: "center",
+  //                   border: [false, false, false, true],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //         // No Teplon
+  //         {
+  //           layout: "noBorders",
+  //           table: {
+  //             widths: ["100%"],
+  //             body: [
+  //               [
+  //                 {
+  //                   text: "0899288299",
+  //                   fontSize: 4,
+  //                   color: "#a8a8a8",
+  //                   bold: false,
+  //                   alignment: "center",
+  //                   margin: [0, -3, 0, 0],
+  //                 },
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //       ],
+  //       pageMargins: [10, 40, 10, 40],
+  //       pageSize: {
+  //         width: 165,
+  //         // height: 725,
+  //         height: "auto",
+  //       },
+  //     }
+  //     const pdf = pdfMake.createPdf(docDefinition)
+  //     pdf.getBlob(async (blob: Blob) => {
+  //       const formData = new FormData()
+  //       formData.append("file", blob, `${data?.invoice}.pdf`)
 
-        await fetchWrapper.post("transaction/saveInv", formData)
-      })
+  //       await fetchWrapper.post("transaction/saveInv", formData)
+  //     })
 
-      pdf.open()
-    } catch (error) {
-      console.error("Terjadi kesalahan:", error)
-    }
-  }
+  //     pdf.open()
+  //   } catch (error) {
+  //     console.error("Terjadi kesalahan:", error)
+  //   }
+  // }
 
   const saveData = async () => {
     try {
@@ -398,7 +398,7 @@
         confirmModal.value = false
         emit("close", false)
 
-        await onGenPDF(response.data)
+        // await onGenPDF(response.data)
 
         setTimeout(async () => {
           window.location.reload()
