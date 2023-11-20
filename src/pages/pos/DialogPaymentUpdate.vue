@@ -75,9 +75,10 @@
     }
   }
 
-  import * as pdfMake from 'pdfmake/build/pdfmake'
-  import * as pdfFonts from "pdfmake/build/vfs_fonts.js"
-  (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs; //Update PdfMake
+  import * as pdfMake from "pdfmake/build/pdfmake"
+  import * as pdfFonts from "pdfmake/build/vfs_fonts"
+
+  ;(<any>pdfMake).addVirtualFileSystem(pdfFonts)
 
   const onGenPDF = async (data: any) => {
     try {

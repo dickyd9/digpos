@@ -1456,16 +1456,6 @@
     crypto-js "^4.0.0"
     png-js "^1.0.0"
 
-"@foliojs-fork/pdfkit@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.npmjs.org/@foliojs-fork/pdfkit/-/pdfkit-0.14.0.tgz"
-  integrity sha512-nMOiQAv6id89MT3tVTCgc7HxD5ZMANwio2o5yvs5sexQkC0KI3BLaLakpsrHmFfeGFAhqPmZATZGbJGXTUebpg==
-  dependencies:
-    "@foliojs-fork/fontkit" "^1.9.1"
-    "@foliojs-fork/linebreak" "^1.1.1"
-    crypto-js "^4.2.0"
-    png-js "^1.0.0"
-
 "@foliojs-fork/restructure@^2.0.2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@foliojs-fork/restructure/-/restructure-2.0.2.tgz"
@@ -3428,7 +3418,7 @@ cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-crypto-js@^4.0.0, crypto-js@^4.2.0:
+crypto-js@^4.0.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz"
   integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
@@ -6088,13 +6078,13 @@ path@^0.12.7:
     process "^0.11.1"
     util "^0.10.3"
 
-pdfmake@^0.2.8:
-  version "0.2.8"
-  resolved "https://registry.npmjs.org/pdfmake/-/pdfmake-0.2.8.tgz"
-  integrity sha512-lI+amfIaUL8CrPhndxFdhIgMj9JB49Sj4DARltKC1gLm/5NsPohZqfB+D+II8HymtPB6eugUFD5oBxmzO57qHA==
+pdfmake@^0.3.0-beta.1:
+  version "0.3.0-beta.1"
+  resolved "https://registry.npmjs.org/pdfmake/-/pdfmake-0.3.0-beta.1.tgz"
+  integrity sha512-Keck2ShE65ElX2S0tmTQ0MlB3xUhdqHsD8erC/1PPdjVQM+pEORRBxWbonPmw1UbF5lIU3r5+BKOgQl+jp2pKg==
   dependencies:
     "@foliojs-fork/linebreak" "^1.1.1"
-    "@foliojs-fork/pdfkit" "^0.14.0"
+    "@foliojs-fork/pdfkit" "^0.13.0"
     iconv-lite "^0.6.3"
     xmldoc "^1.1.2"
 

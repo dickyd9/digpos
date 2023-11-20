@@ -20,23 +20,6 @@ export default defineConfig({
     vue(),
     VitePWA({
       injectRegister: "auto",
-      manifest: {
-        name: "Digpos", // Ganti dengan nama aplikasi Anda
-        short_name: "POS", // Ganti dengan nama singkat aplikasi Anda
-        theme_color: "#ffffff", // Ganti dengan warna tema yang diinginkan
-        icons: [
-          {
-            src: "/path/ke/icon.png", // Ganti dengan path ke ikon Anda
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "/path/ke/icon512.png", // Ganti dengan path ke ikon 512x512 Anda
-            sizes: "512x512",
-            type: "image/png",
-          },
-        ],
-      },
     }),
   ],
   resolve: {
