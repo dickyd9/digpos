@@ -163,7 +163,10 @@
   const paymentUpdate = (value: any) => {
     paymentUpdateData.value = value as ILastTransaction
 
+    console.log('Click In All :' + value)
+    
     if (value?.paymentStatus === "SELECTING_PAYMENT") {
+      console.log('Click In pending :' + value)
       paymentUpdateModal.value = true
     }
   }
