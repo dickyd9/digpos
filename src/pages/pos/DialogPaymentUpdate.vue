@@ -77,7 +77,7 @@
 
   import * as pdfMake from "pdfmake/build/pdfmake"
   import * as pdfFonts from "pdfmake/build/vfs_fonts"
-  pdfMake.vfs = pdfFonts.pdfMake.vfs
+  (pdfMake as any).vfs = pdfFonts.pdfMake.vfs
 
   const onGenPDF = async (data: any) => {
     try {

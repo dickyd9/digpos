@@ -204,7 +204,7 @@
         <!-- New Trx -->
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
-            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
+            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2> {{ paymentUpdateModal }}
           </div>
           <div
             class="flex w-full h-[8rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
