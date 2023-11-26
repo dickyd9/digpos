@@ -90,7 +90,7 @@
 
   const getData = async () => {
     try {
-      const response = await fetchWrapper.get("item/menu", params)
+      const response = await fetchWrapper.get("item/menu")
       serviceItem.value = response as IService[]
     } catch (error) {}
   }
@@ -161,6 +161,8 @@
   const invoiceModal = ref(false)
   let paymentUpdateData = ref<ILastTransaction>()
   const paymentUpdate = (value: any) => {
+    // paymentUpdateData.value = value as ILastTransaction
+    // paymentUpdateModal.value = true
     if (value?.paymentStatus !== "PAID") {
       paymentUpdateData.value = value as ILastTransaction
       paymentUpdateModal.value = true
@@ -200,7 +202,7 @@
         <!-- New Trx -->
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
-            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2> 
+            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
           </div>
           <div
             class="flex w-full h-[8rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
