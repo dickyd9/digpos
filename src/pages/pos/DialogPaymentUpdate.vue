@@ -538,6 +538,7 @@
                 class="mt-3 !box sm:mt-0">
                 <option value="CASH">Cash</option>
                 <option value="DEBIT">Debit</option>
+                <option value="TRANSFER">Transfer</option>
               </FormSelect>
             </div>
             <div class="h-full">
