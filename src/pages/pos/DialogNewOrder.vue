@@ -57,8 +57,8 @@
 
   const getData = async () => {
     try {
-      const response = await fetchWrapper.get("customer")
-      customerList.value = response?.data as ICustomer[]
+      const response = await fetchWrapper.get("customer/all")
+      customerList.value = response as ICustomer[]
     } catch (error) {}
   }
 
