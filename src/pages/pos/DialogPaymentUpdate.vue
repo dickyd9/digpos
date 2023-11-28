@@ -151,7 +151,7 @@
                 margin: [2, 1, 2, -1],
               },
               {
-                text: "+62 899-288-299",
+                text: "+62 813-8647-0818",
                 fontSize: 2,
                 color: "#a8a8a8",
                 alignment: "center",
