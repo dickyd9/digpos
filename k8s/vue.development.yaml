@@ -20,6 +20,6 @@ spec:
             value: 'http://34.28.27.187:3000'
 
           ports:
-            - containerPort: 3003
+            - containerPort: 3005
           imagePullPolicy: Always
       restartPolicy: Always
