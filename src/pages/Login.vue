@@ -113,10 +113,10 @@
               </template>
             </div>
           </div>
-          <div
+          <!-- <div
             class="flex justify-end mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
             <a href="">Forgot Password?</a>
-          </div>
+          </div> -->
           <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
             <Button
               variant="primary"
@@ -129,7 +129,7 @@
                 class="w-4 h-4 ml-2" />
             </Button>
           </div>
-          <div
+          <!-- <div
             class="mt-10 text-center intro-x xl:mt-10 text-slate-600 dark:text-slate-500 xl:text-left">
             By signin up, you agree to our
             <a class="text-primary dark:text-slate-200" href="">
@@ -139,7 +139,7 @@
             <a class="text-primary dark:text-slate-200" href="">
               Privacy Policy
             </a>
-          </div>
+          </div> -->
         </form>
         <!-- BEGIN: Login Form -->
         <!-- <div class="!box flex h-screen py-5 my-5 xl:h-auto xl:py-0 xl:my-5">

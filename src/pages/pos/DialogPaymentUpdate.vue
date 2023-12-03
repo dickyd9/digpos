@@ -80,6 +80,7 @@
 
   import pdfMake from "pdfmake/build/pdfmake"
   import pdfFonts from "pdfmake/build/vfs_fonts"
+
   // ;(<any>pdfMake).addVirtualFileSystem(pdfFonts)
 
   const onGenPDF = async (data: any) => {
@@ -104,7 +105,7 @@
                     (itemPrice ? "Rp. " + formatCurrency(itemPrice) : "Rp. 0"),
                 },
               ],
-              margin: [0, -5, 0, 2],
+              margin: [0, 1, 0, 3],
             },
             {
               stack: [
@@ -112,7 +113,7 @@
                 {
                   text: "Rp. " + formatCurrency(totalPrice),
                   alignment: "right",
-                  margin: [0, -5, 0, 0],
+                  margin: [0, 1, 0, 3],
                 },
               ],
             },
@@ -130,7 +131,7 @@
                 [
                   {
                     text: "Nova Beauty Salon & Spa",
-                    fontSize: 4,
+                    fontSize: 12,
                     bold: true,
                     alignment: "center",
                     border: [false, false, false, true],
@@ -145,17 +146,17 @@
             stack: [
               {
                 text: "Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang, Banten - 15730 ",
-                fontSize: 2,
+                fontSize: 6,
                 color: "#a8a8a8",
                 alignment: "center",
-                margin: [2, 1, 2, -1],
+                margin: [3, 1, 3, -1],
               },
               {
                 text: "+62 813-8647-0818",
-                fontSize: 2,
+                fontSize: 6,
                 color: "#a8a8a8",
                 alignment: "center",
-                margin: [2, 1, 2, 1],
+                margin: [3, 1, 3, 3],
               },
             ],
           },
@@ -167,9 +168,9 @@
                 type: "line",
                 x1: 0,
                 y1: 0,
-                x2: 100,
+                x2: 800,
                 y2: 0,
-                dash: { length: 1, space: 1 },
+                dash: { length: 2, space: 1 },
                 lineWidth: 0.2,
               },
             ],
@@ -178,16 +179,16 @@
           // Invoice
           {
             layout: "noBorders",
-            fontSize: 2,
+            fontSize: 7,
             table: {
               widths: ["50%", "50%"],
               body: [
                 [
-                  { text: "Nama Pelanggan", bold: true, margin: [0, 0, 0, -3] },
+                  { text: "Nama Pelanggan", bold: true, margin: [0, 0, 0, 0] },
                   {
                     text: data?.customerName,
                     alignment: "right",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, 0],
                   },
                 ],
               ],
@@ -195,7 +196,7 @@
           },
           {
             layout: "noBorders",
-            fontSize: 2,
+            fontSize: 7,
             table: {
               widths: ["50%", "50%"],
               body: [
@@ -204,11 +205,13 @@
                     text: "No. Invoice",
                     bold: true,
                     border: [false, true, false, false],
+                    margin: [0, -3, 0, 0],
                   },
                   {
                     text: "#" + data?.invoice,
                     alignment: "right",
                     border: [false, true, false, false],
+                    margin: [0, -3, 0, 0],
                   },
                 ],
               ],
@@ -216,7 +219,7 @@
           },
           {
             layout: "noBorders",
-            fontSize: 2,
+            fontSize: 7,
             table: {
               widths: ["50%", "50%"],
               body: [
@@ -231,23 +234,25 @@
               ],
             },
           },
+
           // Spacing
           {
             canvas: [
               {
                 type: "line",
                 x1: 0,
-                y1: -5,
-                x2: 100,
-                y2: -5,
-                dash: { length: 1, space: 1 },
+                y1: 0,
+                x2: 800,
+                y2: 0,
+                dash: { length: 2, space: 1 },
                 lineWidth: 0.2,
               },
             ],
           },
+
           // Item
           {
-            fontSize: 2,
+            fontSize: 7,
             layout: "noBorders",
             table: {
               headerRows: 1,
@@ -263,16 +268,17 @@
                 type: "line",
                 x1: 0,
                 y1: 0,
-                x2: 100,
+                x2: 800,
                 y2: 0,
-                dash: { length: 1, space: 1 },
+                dash: { length: 2, space: 1 },
                 lineWidth: 0.2,
               },
             ],
           },
+
           // Meta Price
           {
-            fontSize: 2,
+            fontSize: 7,
             layout: "noBorders",
             table: {
               headerRows: 1,
@@ -341,6 +347,7 @@
               ],
             },
           },
+
           // Spacing
           {
             canvas: [
@@ -348,9 +355,9 @@
                 type: "line",
                 x1: 0,
                 y1: 0,
-                x2: 100,
+                x2: 800,
                 y2: 0,
-                dash: { length: 1, space: 1 },
+                dash: { length: 2, space: 1 },
                 lineWidth: 0.2,
               },
             ],
@@ -358,7 +365,7 @@
           {
             stack: [
               {
-                fontSize: 2,
+                fontSize: 7,
                 text: "Terima Kasih!",
                 alignment: "center",
                 margin: [0, 2, 0, 0],
@@ -368,26 +375,33 @@
         ],
         pageMargins: [2, 0, 2, 5],
         pageSize: {
-          width: 58,
-          // height: 725,
+          width: 164,
+          // width: '4 932.28346',
+          // // height: 725,
           height: "auto",
         },
+        // pageSize: {
+        //   width: 164,
+        //   // width: '4 932.28346',
+        //   // // height: 725,
+        //   height: "auto",
+        // },
       }
 
       const pdf = pdfMake.createPdf(docDefinition)
 
-      // pdf.getBlob(async (blob: Blob) => {
-      //   const formData = new FormData()
-      //   formData.append("file", blob, `${data?.invoice}.pdf`)
-      //   try {
-      //     await fetchWrapper.post(
-      //       `transaction/saveInv/${data?.paymentCode}`,
-      //       formData
-      //     )
-      //   } catch (error) {
-      //     console.error("Gagal mengirim file PDF:")
-      //   }
-      // })
+      pdf.getBlob(async (blob: Blob) => {
+        const formData = new FormData()
+        formData.append("file", blob, `${data?.invoice}.pdf`)
+        try {
+          await fetchWrapper.post(
+            `transaction/saveInv/${data?.paymentCode}`,
+            formData
+          )
+        } catch (error) {
+          console.error("Gagal mengirim file PDF:")
+        }
+      })
       pdf.open()
 
       return pdf

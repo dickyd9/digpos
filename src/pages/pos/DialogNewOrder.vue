@@ -163,7 +163,7 @@
           </div>
           <Tab.Panels>
             <Tab.Panel>
-              <div class="my-4">
+              <div class="my-4 !box">
                 <TomSelect
                   v-model="chooseCustomer.customerCode"
                   style="border: 1px !important"

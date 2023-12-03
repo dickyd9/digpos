@@ -54,21 +54,34 @@
   })
 
   const calculateTotals = () => {
-    carts.value.map((cart: any) => {
-      priceMeta.value.subtotal = carts.value.reduce(
-        (acc, cartItem) => acc + cartItem.itemPrice, // Ganti 'totalItem' dengan nama properti yang sesuai
-        0
-      )
-      priceMeta.value.totalItem = carts.value.reduce(
-        (acc, cartItem) => acc + cartItem.amount, // Ganti 'totalItem' dengan nama properti yang sesuai
-        0
-      )
+    let subtotal = 0
+    let totalItem = 0
+    let totalPoint = 0
 
-      priceMeta.value.totalPoint = carts.value.reduce(
-        (acc, cartItem) => acc + cartItem.itemPoint, // Ganti 'totalItem' dengan nama properti yang sesuai
-        0
-      )
+    carts.value.forEach((cart: any) => {
+      subtotal += cart.itemPrice * cart.amount
+      totalItem += cart.amount
+      totalPoint += cart.itemPoint * cart.amount
     })
+
+    priceMeta.value.subtotal = subtotal
+    priceMeta.value.totalItem = totalItem
+    priceMeta.value.totalPoint = totalPoint
+    // carts.value.map((cart: any) => {
+    //   priceMeta.value.subtotal = carts.value.reduce(
+    //     (acc, cartItem) => acc + cartItem.itemPrice, // Ganti 'totalItem' dengan nama properti yang sesuai
+    //     0
+    //   )
+    //   priceMeta.value.totalItem = carts.value.reduce(
+    //     (acc, cartItem) => acc + cartItem.amount, // Ganti 'totalItem' dengan nama properti yang sesuai
+    //     0
+    //   )
+
+    //   priceMeta.value.totalPoint = carts.value.reduce(
+    //     (acc, cartItem) => acc + cartItem.itemPoint, // Ganti 'totalItem' dengan nama properti yang sesuai
+    //     0
+    //   )
+    // })
   }
 
   watch(
@@ -141,13 +154,26 @@
     }
   }
 
+  const counting = (value: string, initValue: any) => {
+    if (value === "plus") {
+      initValue.amount++
+    } else {
+      if (initValue.amount != 0) {
+        initValue.amount--
+      }
+    }
+  }
+
   const processModal = ref(false)
   let dataOrder = ref({})
   const pay = () => {
+    const amount = carts.value.some((e) => e.amount === 0)
     if (!paymentStorage) {
       toast.error("Silahkan buat pesanan baru!")
     } else if (!carts.value.length) {
       toast.error("Keranjang Masih Kosong, Silahkan pilih menu!")
+    } else if (amount) {
+      toast.error("Silihkan pilih jumlah item!")
     } else {
       dataOrder.value = {
         ...paymentData.value,
@@ -205,7 +231,12 @@
             <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
           </div>
           <div
-            class="flex w-full h-[8rem] overflow-x-auto overflow-y-hidden gap-3 my-3">
+            :class="
+              lastTransaction.length
+                ? 'h-[8rem] border-b-2 border-b-slate-200 border-dashed pb-8 mb-8'
+                : ''
+            "
+            class="flex w-full overflow-x-auto overflow-y-hidden gap-3 my-3">
             <a
               @click="paymentUpdate(trx)"
               v-for="(trx, index) in lastTransaction"
@@ -239,14 +270,6 @@
                       class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
                       {{ trx.totalAmount }} Item
                     </div>
-                    <div
-                      class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                      {{
-                        trx.totalPrice
-                          ? "Rp. " + formatCurrency(trx.totalPrice)
-                          : "-"
-                      }}
-                    </div>
                   </div>
 
                   <div
@@ -261,6 +284,11 @@
                 </div>
               </Tippy>
             </a>
+            <div
+              v-if="!lastTransaction.length"
+              class="w-full flex justify-center text-slate-400">
+              Belum ada transaksi
+            </div>
           </div>
         </div>
 
@@ -284,8 +312,8 @@
               }"
               class="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
               <option>Sort By</option>
-              <option value="a">A to Z</option>
-              <option value="b">Z to A</option>
+              <option value="asc">A to Z</option>
+              <option value="desc">Z to A</option>
               <option value="c">Lowest Price</option>
               <option value="d">Highest Price</option>
             </FormSelect>
@@ -334,11 +362,32 @@
           href="#"
           :key="index"
           class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
-          <div class="flex">
-            <div class="max-w-[50%] truncate mr-1">
+          <div class="flex items-center">
+            <div class="max-w-[50%] truncate mr-4">
               {{ cart.itemName }}
             </div>
-            <div class="text-slate-500">{{ cart.amount }}X</div>
+            <!-- <div class="text-slate-500">{{ cart.amount }}X</div> -->
+            <div
+              class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
+              <button
+                @click="
+                  () => {
+                    counting('min', cart)
+                  }
+                "
+                class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-6 w-6 rounded-l cursor-pointer outline-none">
+                -
+              </button>
+              <p
+                class="outline-none text-center h-6 w-6 bg-gray-300 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center justify-center text-gray-700">
+                {{ cart.amount }}
+              </p>
+              <button
+                @click="counting('plus', cart)"
+                class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-6 w-6 rounded-r cursor-pointer">
+                +
+              </button>
+            </div>
             <div class="ml-auto font-medium">
               Rp. {{ formatCurrency(cart.itemPrice) }}
             </div>
