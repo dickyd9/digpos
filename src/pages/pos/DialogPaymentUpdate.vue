@@ -105,7 +105,7 @@
                     (itemPrice ? "Rp. " + formatCurrency(itemPrice) : "Rp. 0"),
                 },
               ],
-              margin: [0, 1, 0, 3],
+              margin: [0, 2, 0, 3],
             },
             {
               stack: [
@@ -113,7 +113,7 @@
                 {
                   text: "Rp. " + formatCurrency(totalPrice),
                   alignment: "right",
-                  margin: [0, 1, 0, 3],
+                  margin: [0, 2, 0, 3],
                 },
               ],
             },
@@ -131,7 +131,7 @@
                 [
                   {
                     text: "Nova Beauty Salon & Spa",
-                    fontSize: 12,
+                    fontSize: 14,
                     bold: true,
                     alignment: "center",
                     border: [false, false, false, true],
@@ -146,15 +146,13 @@
             stack: [
               {
                 text: "Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang, Banten - 15730 ",
-                fontSize: 6,
-                color: "#a8a8a8",
+                fontSize: 7,
                 alignment: "center",
                 margin: [3, 1, 3, -1],
               },
               {
                 text: "+62 813-8647-0818",
                 fontSize: 6,
-                color: "#a8a8a8",
                 alignment: "center",
                 margin: [3, 1, 3, 3],
               },
@@ -179,9 +177,9 @@
           // Invoice
           {
             layout: "noBorders",
-            fontSize: 7,
+            fontSize: 9,
             table: {
-              widths: ["50%", "50%"],
+              widths: ["*", "*"],
               body: [
                 [
                   { text: "Nama Pelanggan", bold: true, margin: [0, 0, 0, 0] },
@@ -196,9 +194,9 @@
           },
           {
             layout: "noBorders",
-            fontSize: 7,
+            fontSize: 9,
             table: {
-              widths: ["50%", "50%"],
+              widths: ["*", "*"],
               body: [
                 [
                   {
@@ -219,12 +217,12 @@
           },
           {
             layout: "noBorders",
-            fontSize: 7,
+            fontSize: 9,
             table: {
-              widths: ["50%", "50%"],
+              widths: ["*", "*"],
               body: [
                 [
-                  { text: "Tanggal", bold: true, margin: [0, -3, 0, 5] },
+                  { text: "Tanggal", bold: true, margin: [0, -3, 0, 2] },
                   {
                     text: formatDate(data?.paymentDate, "DD MMMM YYYY"),
                     alignment: "right",
@@ -252,7 +250,7 @@
 
           // Item
           {
-            fontSize: 7,
+            fontSize: 9,
             layout: "noBorders",
             table: {
               headerRows: 1,
@@ -278,62 +276,86 @@
 
           // Meta Price
           {
-            fontSize: 7,
+            fontSize: 9,
             layout: "noBorders",
             table: {
               headerRows: 1,
-              widths: ["50%", "50%"],
+              widths: ["*", "*"],
               body: [
+                [
+                  {
+                    text: "Total Qty:",
+                    bold: true,
+                    alignment: "left",
+                    margin: [0, 0, 0, -2],
+                  },
+                  {
+                    text: data?.totalAmount,
+                    alignment: "right",
+                    margin: [0, 0, 0, -2],
+                  },
+                ],
                 [
                   {
                     text: "Sub Total :",
                     bold: true,
                     alignment: "left",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text: "Rp. " + formatCurrency(data?.totalPrice),
                     alignment: "right",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
                   {
-                    text: "Total Point :",
+                    text: "Point :",
                     bold: true,
                     alignment: "left",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text: data?.totalPoint,
                     alignment: "right",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
                   {
-                    text: "Jumlah Bayar :",
+                    text: "Metode :",
                     bold: true,
                     alignment: "left",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
+                  },
+                  {
+                    text: data?.paymentMethod,
+                    alignment: "right",
+                    margin: [0, 0, 0, -2],
+                  },
+                ],
+                [
+                  {
+                    text: "Bayar :",
+                    bold: true,
+                    alignment: "left",
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text:
                       data?.paymentAmount !== 0
-                        ? `(${data?.paymentMethod}) ` +
-                          "Rp. " +
-                          formatCurrency(data?.paymentAmount)
-                        : `(${data?.paymentMethod}) ` + "Rp. 0",
+                        ? "Rp. " + formatCurrency(data?.paymentAmount)
+                        : "Rp. 0",
                     alignment: "right",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
                   {
-                    text: "Jumlah Kembali :",
+                    text: "Kembali :",
                     bold: true,
                     alignment: "left",
-                    margin: [0, 0, 0, -3],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text:
@@ -365,7 +387,7 @@
           {
             stack: [
               {
-                fontSize: 7,
+                fontSize: 9,
                 text: "Terima Kasih!",
                 alignment: "center",
                 margin: [0, 2, 0, 0],
@@ -375,7 +397,7 @@
         ],
         pageMargins: [2, 0, 2, 5],
         pageSize: {
-          width: 164,
+          width: 166,
           // width: '4 932.28346',
           // // height: 725,
           height: "auto",
@@ -390,18 +412,18 @@
 
       const pdf = pdfMake.createPdf(docDefinition)
 
-      pdf.getBlob(async (blob: Blob) => {
-        const formData = new FormData()
-        formData.append("file", blob, `${data?.invoice}.pdf`)
-        try {
-          await fetchWrapper.post(
-            `transaction/saveInv/${data?.paymentCode}`,
-            formData
-          )
-        } catch (error) {
-          console.error("Gagal mengirim file PDF:")
-        }
-      })
+      // pdf.getBlob(async (blob: Blob) => {
+      //   const formData = new FormData()
+      //   formData.append("file", blob, `${data?.invoice}.pdf`)
+      //   try {
+      //     await fetchWrapper.post(
+      //       `transaction/saveInv/${data?.paymentCode}`,
+      //       formData
+      //     )
+      //   } catch (error) {
+      //     console.error("Gagal mengirim file PDF:")
+      //   }
+      // })
       pdf.open()
 
       return pdf

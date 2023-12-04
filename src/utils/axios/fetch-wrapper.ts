@@ -6,8 +6,8 @@ import { toast } from "vue3-toastify"
 const base_url = import.meta.env.VITE_API_URL as string
 
 const axiosInstance = axios.create({
-  // baseURL: `https://dev-backend.digvation.tech/api` || `${base_url}/api`,
-  baseURL: `${base_url}/api`,
+  baseURL: `https://dev-backend.digvation.tech/api` || `${base_url}/api`,
+  // baseURL: `${base_url}/api`,
   withCredentials: false,
   headers: {
     "Access-Control-Allow-Origin": "*",
