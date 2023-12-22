@@ -29,6 +29,7 @@
     "dotenv": "^16.3.1",
     "dotenv-safe": "^8.2.0",
     "dropzone": "^6.0.0-beta.2",
+    "element-plus": "^2.4.4",
     "flat": "^5.0.2",
     "highlight.js": "^11.6.0",
     "html-to-pdfmake": "^2.5.1",

@@ -40,7 +40,7 @@
     params.sort_column = data.sort_column
     params.sort_direction = data.sort_direction
 
-    getData()
+    getData("")
   }
   const serviceItem = ref<IService[]>([])
   let carts = ref<ICart[]>([])
@@ -67,21 +67,6 @@
     priceMeta.value.subtotal = subtotal
     priceMeta.value.totalItem = totalItem
     priceMeta.value.totalPoint = totalPoint
-    // carts.value.map((cart: any) => {
-    //   priceMeta.value.subtotal = carts.value.reduce(
-    //     (acc, cartItem) => acc + cartItem.itemPrice, // Ganti 'totalItem' dengan nama properti yang sesuai
-    //     0
-    //   )
-    //   priceMeta.value.totalItem = carts.value.reduce(
-    //     (acc, cartItem) => acc + cartItem.amount, // Ganti 'totalItem' dengan nama properti yang sesuai
-    //     0
-    //   )
-
-    //   priceMeta.value.totalPoint = carts.value.reduce(
-    //     (acc, cartItem) => acc + cartItem.itemPoint, // Ganti 'totalItem' dengan nama properti yang sesuai
-    //     0
-    //   )
-    // })
   }
 
   watch(
@@ -100,13 +85,6 @@
       deep: true,
     }
   )
-
-  const getData = async () => {
-    try {
-      const response = await fetchWrapper.get("item/menu")
-      serviceItem.value = response as IService[]
-    } catch (error) {}
-  }
 
   // payment Storage
   const paymentStorage = localStorage.getItem("paymentCreated")
@@ -128,7 +106,7 @@
       toast.error("Silahkan buat pesanan baru!")
     } else {
       const existingItem = carts.value.find(
-        (cartItem) => cartItem.itemCode === item.itemCode
+        (cartItem) => cartItem.servicesCode === item.servicesCode
       )
       if (existingItem) {
         // Jika item sudah ada, tambahkan kuantitasnya
@@ -136,10 +114,10 @@
       } else {
         // Jika item belum ada, tambahkan item baru ke dalam keranjang
         carts.value.push({
-          itemCode: item.itemCode,
-          itemName: item.itemName,
-          itemPrice: item.itemPrice,
-          itemPoint: item.itemPoint,
+          servicesCode: item.servicesCode,
+          servicesName: item.servicesName,
+          servicesPrice: item.servicesPrice,
+          servicesPoint: item.servicesPoint,
           employeeCode: null,
           amount: 1,
         })
@@ -147,7 +125,9 @@
     }
   }
   const clearItem = (item: ICart) => {
-    const index = carts.value.findIndex((itm) => itm.itemCode === item.itemCode)
+    const index = carts.value.findIndex(
+      (itm) => itm.servicesCode === item.servicesCode
+    )
 
     if (index !== -1) {
       carts.value.splice(index, 1)
@@ -187,12 +167,12 @@
   const invoiceModal = ref(false)
   let paymentUpdateData = ref<ILastTransaction>()
   const paymentUpdate = (value: any) => {
-    // paymentUpdateData.value = value as ILastTransaction
-    // paymentUpdateModal.value = true
-    if (value?.paymentStatus !== "PAID") {
-      paymentUpdateData.value = value as ILastTransaction
-      paymentUpdateModal.value = true
-    }
+    paymentUpdateData.value = value as ILastTransaction
+    paymentUpdateModal.value = true
+    // if (value?.paymentStatus !== "PAID") {
+    //   paymentUpdateData.value = value as ILastTransaction
+    //   paymentUpdateModal.value = true
+    // }
   }
 
   // Delete Item
@@ -210,12 +190,67 @@
     } catch (error) {}
   }
 
-  const deleteAllItem = () => {
-    carts.value = [] as ICart[]
+  const tabClick = async (name: string, index: number) => {
+    try {
+      // const data: IService = await getData(name)
+      // serviceItem.value = data
+    } catch (error) {}
   }
 
+  const deleteAllItem = () => {
+    carts.value = []
+  }
+
+  interface TabMenu extends IService {
+    categoryName: string
+    services: object[] | IService[]
+  }
+
+  const tab = ref<TabMenu[]>([])
+
+  const getData = async (category: any) => {
+    try {
+      const data: IService[] = await fetchWrapper.get(`pos/menu`)
+      const dataCategory = await fetchWrapper.get("pos/services-category")
+
+      const groupedItemsByCategory: { [key: string]: any[] } = {}
+      data.forEach((service: any) => {
+        let { servicesCategory, ...rest } = service
+
+        if (!servicesCategory) {
+          servicesCategory = "All"
+        }
+
+        if (!groupedItemsByCategory[servicesCategory]) {
+          groupedItemsByCategory[servicesCategory] = []
+        }
+        groupedItemsByCategory[servicesCategory].push(rest)
+      })
+
+      const categoriesNull = [
+        ...dataCategory.map((cat: any) => cat.categoryName),
+        "All",
+      ]
+
+      const mergedData: { categoryName: string; services: any[] }[] =
+        categoriesNull.map((category: any) => {
+          return {
+            categoryName: category,
+            services: groupedItemsByCategory[category] || [], // Gunakan data item yang sesuai dengan categoryName
+          }
+        })
+
+      tab.value = mergedData as TabMenu[]
+    } catch (error) {
+      throw new Error("Gagal mengambil data")
+    }
+  }
+
+  const activeTab = ref(0)
+
   onMounted(() => {
-    getData()
+    getData("")
+    // getCategory()
     getLastTransaction()
   })
 </script>
@@ -318,24 +353,52 @@
               <option value="d">Highest Price</option>
             </FormSelect>
           </div>
-          <div class="grid grid-cols-12 gap-5 pt-5 mt-5 border-t">
-            <a
-              v-for="(service, index) in serviceItem"
-              :key="index"
-              href="#"
-              @click="addCart(service)"
-              class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
-              <div class="flex p-3 rounded-md box zoom-in">
-                <div class="block font-medium truncate">
-                  <a href="" class="font-medium whitespace-nowrap">
-                    {{ service.itemName }}
+          <div class="pt-5 mt-5 border-t">
+            <Tab.Group>
+              <Tab.List variant="boxed-tabs">
+                <Tab v-for="(header, index) in tab" :key="index">
+                  <Tab.Button
+                    @click="tabClick(header.categoryName, index)"
+                    class="w-full py-2"
+                    as="button">
+                    {{ header.categoryName }}
+                  </Tab.Button>
+                </Tab>
+              </Tab.List>
+              <Tab.Panels class="mt-5">
+                <Tab.Panel
+                  v-for="(srHead, index) in tab"
+                  :key="index"
+                  class="grid grid-cols-12 gap-5 leading-relaxed">
+                  <a
+                    href="#"
+                    v-for="(services, index) in srHead.services"
+                    @click="addCart(srHead)"
+                    class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+                    <el-tooltip
+                      class="box-item"
+                      effect="dark"
+                      :content="(services as any).servicesName"
+                      placement="top-start">
+                      <div class="flex p-3 rounded-md box zoom-in">
+                        <div class="block font-medium truncate">
+                          <a href="" class="font-medium whitespace-nowrap">
+                            {{ (services as any).servicesName }}
+                          </a>
+                          <div
+                            class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                            {{
+                              "Rp. " +
+                              formatCurrency((services as any).servicesPrice)
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                    </el-tooltip>
                   </a>
-                  <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                    {{ "Rp. " + formatCurrency(service.itemPrice) }}
-                  </div>
-                </div>
-              </div>
-            </a>
+                </Tab.Panel>
+              </Tab.Panels>
+            </Tab.Group>
           </div>
         </div>
       </div>
@@ -364,7 +427,7 @@
           class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
           <div class="flex items-center">
             <div class="max-w-[50%] truncate mr-4">
-              {{ cart.itemName }}
+              {{ cart.servicesName }}
             </div>
             <!-- <div class="text-slate-500">{{ cart.amount }}X</div> -->
             <div
@@ -389,7 +452,7 @@
               </button>
             </div>
             <div class="ml-auto font-medium">
-              Rp. {{ formatCurrency(cart.itemPrice) }}
+              Rp. {{ formatCurrency(cart.servicesPrice) }}
             </div>
             <button class="rounded border ml-2 hover:bg-red-700">
               <Lucide

@@ -10,12 +10,14 @@ export interface IUser {
 // Service Interface
 export interface IService {
   _id: string
-  itemCode: string
-  itemName: string
-  itemPrice: number
-  itemPoint: number
-  itemStatus: string
-  employeeCode: string
+  servicesCode: string
+  servicesName: string
+  servicesPrice: number
+  servicesCategory: string
+  servicesPoint: number
+  servicesStatus: string
+  servicesItem: string
+  deletedAt: Date
   createdAt: Date
 }
 
@@ -162,10 +164,10 @@ export interface IPaginate {
 }
 
 export interface ICart {
-  itemCode: string
-  itemName: string
-  itemPrice: number
-  itemPoint: number
+  servicesCode: string
+  servicesName: string
+  servicesPrice: number
+  servicesPoint: number
   employeeCode: string | undefined | null
   amount: number
 }

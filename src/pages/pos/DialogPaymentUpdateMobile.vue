@@ -105,7 +105,7 @@
                     (itemPrice ? "Rp. " + formatCurrency(itemPrice) : "Rp. 0"),
                 },
               ],
-              margin: [6, 2, 0, 3],
+              margin: [0, 2, 0, 3],
             },
             {
               stack: [
@@ -113,7 +113,7 @@
                 {
                   text: "Rp. " + formatCurrency(totalPrice),
                   alignment: "right",
-                  margin: [0, 2, 6, 3],
+                  margin: [0, 2, 0, 3],
                 },
               ],
             },
@@ -131,7 +131,7 @@
                 [
                   {
                     text: "Nova Beauty Salon & Spa",
-                    fontSize: 12,
+                    fontSize: 14,
                     bold: true,
                     alignment: "center",
                     border: [false, false, false, true],
@@ -177,16 +177,16 @@
           // Invoice
           {
             layout: "noBorders",
-            fontSize: 8,
+            fontSize: 9,
             table: {
               widths: ["*", "*"],
               body: [
                 [
-                  { text: "Nama Pelanggan", bold: true, margin: [6, 0, 0, 0] },
+                  { text: "Nama Pelanggan", bold: true, margin: [0, 0, 0, 0] },
                   {
                     text: data?.customerName,
                     alignment: "right",
-                    margin: [0, 0, 6, 0],
+                    margin: [0, 0, 0, 0],
                   },
                 ],
               ],
@@ -194,22 +194,22 @@
           },
           {
             layout: "noBorders",
-            fontSize: 8,
+            fontSize: 9,
             table: {
-              widths: ["*", "65%"],
+              widths: ["*", "*"],
               body: [
                 [
                   {
                     text: "No. Invoice",
                     bold: true,
                     border: [false, true, false, false],
-                    margin: [6, -3, 0, 0],
+                    margin: [0, -3, 0, 0],
                   },
                   {
                     text: "#" + data?.invoice,
                     alignment: "right",
                     border: [false, true, false, false],
-                    margin: [0, -3, 6, 0],
+                    margin: [0, -3, 0, 0],
                   },
                 ],
               ],
@@ -217,16 +217,16 @@
           },
           {
             layout: "noBorders",
-            fontSize: 8,
+            fontSize: 9,
             table: {
-              widths: ["*", "65%"],
+              widths: ["*", "*"],
               body: [
                 [
-                  { text: "Tanggal", bold: true, margin: [6, -3, 0, 2] },
+                  { text: "Tanggal", bold: true, margin: [0, -3, 0, 2] },
                   {
                     text: formatDate(data?.paymentDate, "DD MMMM YYYY"),
                     alignment: "right",
-                    margin: [0, -3, 6, 0],
+                    margin: [0, -3, 0, 0],
                   },
                 ],
               ],
@@ -250,7 +250,7 @@
 
           // Item
           {
-            fontSize: 8,
+            fontSize: 9,
             layout: "noBorders",
             table: {
               headerRows: 1,
@@ -276,7 +276,7 @@
 
           // Meta Price
           {
-            fontSize: 8,
+            fontSize: 9,
             layout: "noBorders",
             table: {
               headerRows: 1,
@@ -284,28 +284,15 @@
               body: [
                 [
                   {
-                    text: "Metode :",
-                    bold: true,
-                    alignment: "left",
-                    margin: [6, 0, 0, -2],
-                  },
-                  {
-                    text: data?.paymentMethod,
-                    alignment: "right",
-                    margin: [0, 0, 6, -2],
-                  },
-                ],
-                [
-                  {
                     text: "Total Qty:",
                     bold: true,
                     alignment: "left",
-                    margin: [6, 0, 0, -2],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text: data?.totalAmount,
                     alignment: "right",
-                    margin: [0, 0, 6, -2],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
@@ -313,12 +300,12 @@
                     text: "Sub Total :",
                     bold: true,
                     alignment: "left",
-                    margin: [6, 0, 0, -2],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text: "Rp. " + formatCurrency(data?.totalPrice),
                     alignment: "right",
-                    margin: [0, 0, 6, -2],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
@@ -326,12 +313,25 @@
                     text: "Point :",
                     bold: true,
                     alignment: "left",
-                    margin: [6, 0, 0, -2],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text: data?.totalPoint,
                     alignment: "right",
-                    margin: [0, 0, 6, -2],
+                    margin: [0, 0, 0, -2],
+                  },
+                ],
+                [
+                  {
+                    text: "Metode :",
+                    bold: true,
+                    alignment: "left",
+                    margin: [0, 0, 0, -2],
+                  },
+                  {
+                    text: data?.paymentMethod,
+                    alignment: "right",
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
@@ -339,7 +339,7 @@
                     text: "Bayar :",
                     bold: true,
                     alignment: "left",
-                    margin: [6, 0, 0, -2],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text:
@@ -347,7 +347,7 @@
                         ? "Rp. " + formatCurrency(data?.paymentAmount)
                         : "Rp. 0",
                     alignment: "right",
-                    margin: [0, 0, 6, -2],
+                    margin: [0, 0, 0, -2],
                   },
                 ],
                 [
@@ -355,7 +355,7 @@
                     text: "Kembali :",
                     bold: true,
                     alignment: "left",
-                    margin: [6, 0, 0, -2],
+                    margin: [0, 0, 0, -2],
                   },
                   {
                     text:
@@ -363,7 +363,7 @@
                         ? "Rp. " + formatCurrency(data?.changeAmount)
                         : "Rp. 0",
                     alignment: "right",
-                    margin: [0, 0, 6, 2],
+                    margin: [0, 0, 0, 2],
                   },
                 ],
               ],
@@ -387,7 +387,7 @@
           {
             stack: [
               {
-                fontSize: 8,
+                fontSize: 9,
                 text: "Terima Kasih!",
                 alignment: "center",
                 margin: [0, 2, 0, 0],
@@ -397,11 +397,17 @@
         ],
         pageMargins: [2, 0, 2, 5],
         pageSize: {
-          width: 150,
+          width: 166,
           // width: '4 932.28346',
           // // height: 725,
           height: "auto",
         },
+        // pageSize: {
+        //   width: 164,
+        //   // width: '4 932.28346',
+        //   // // height: 725,
+        //   height: "auto",
+        // },
       }
 
       const pdf = pdfMake.createPdf(docDefinition)

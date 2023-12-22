@@ -30,11 +30,11 @@
   })
   const cols =
     ref([
-      { field: "itemCode", title: "Kode", isUnique: true, sort: false },
-      { field: "itemName", title: "Nama Service" },
-      { field: "itemPrice", title: "Harga", type: "price" },
-      { field: "itemPoint", title: "Poin", type: "number" },
-      { field: "itemStatus", title: "Status", sort: false },
+      { field: "servicesCode", title: "Kode", isUnique: true, sort: false },
+      { field: "servicesName", title: "Nama Service" },
+      { field: "servicesPrice", title: "Harga", type: "price" },
+      { field: "servicesCategory", title: "Kategori" },
+      { field: "servicesPoint", title: "Status", sort: false },
       { field: "createdAt", title: "Tanggal Dibuat", type: "dateTime" },
     ]) || []
 
@@ -42,7 +42,7 @@
     try {
       loading.value = true
 
-      const response = await fetchWrapper.get("item", params)
+      const response = await fetchWrapper.get("services", params)
 
       listService.value = response?.data as IService[]
       pagination.value = response.meta as IPaginate
