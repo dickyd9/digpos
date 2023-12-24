@@ -9,6 +9,7 @@ import SideMenu from "../layouts/SideMenu/SideMenu.vue"
 import ErrorPage from "../pages/ErrorPage.vue"
 import Login from "@/pages/Login.vue"
 import Register from "@/pages/Register.vue"
+import Receipt from "@/pages/pos/Invoice.vue"
 
 // Menu
 import Dashbord from "../pages/dashboard/Dashboard.vue"
@@ -42,6 +43,11 @@ const routes = [
     beforeEnter: requireAuth,
   },
 
+  {
+    path: "/receipt",
+    name: "Receipt",
+    component: Receipt,
+  },
   {
     path: "/login",
     name: "Login",

@@ -27,7 +27,10 @@
   } from "@fullcalendar/vue3"
   import { formatCurrency, formatDate } from "@/utils/helper"
   import DialogInvoice from "./DialogInvoice.vue"
+  import Invoice from "./Invoice.vue"
+  import { useRoute, useRouter } from "vue-router"
 
+  const router = useRouter()
   const props = defineProps({
     updateModal: Boolean,
     dataPayment: Object,
@@ -80,29 +83,30 @@
 
   import pdfMake from "pdfmake/build/pdfmake"
   import pdfFonts from "pdfmake/build/vfs_fonts"
-
-  // ;(<any>pdfMake).addVirtualFileSystem(pdfFonts)
+  ;(<any>pdfMake).addVirtualFileSystem(pdfFonts)
 
   const onGenPDF = async (data: any) => {
     try {
-      const items = data?.items
+      const items = data?.services
       const bodyContent: Object[] = []
 
       if (items && items.length > 0) {
         items.forEach((item: any, index: any) => {
-          const { itemName, itemPrice, itemAmount, totalPrice } = item
+          const { serviceName, servicePrice, serviceAmount, totalPrice } = item
 
-          const total = itemPrice * itemAmount
+          const total = servicePrice * serviceAmount
 
           bodyContent.push([
             {
               stack: [
-                itemName,
+                serviceName,
                 {
                   text:
-                    itemAmount +
+                    serviceAmount +
                     " x " +
-                    (itemPrice ? "Rp. " + formatCurrency(itemPrice) : "Rp. 0"),
+                    (servicePrice
+                      ? "Rp. " + formatCurrency(servicePrice)
+                      : "Rp. 0"),
                 },
               ],
               margin: [6, 2, 0, 3],
@@ -248,14 +252,14 @@
             ],
           },
 
-          // Item
+          // service
           {
             fontSize: 8,
             layout: "noBorders",
             table: {
               headerRows: 1,
               widths: ["50%", "*"],
-              body: [...bodyContent.map((item) => Object.values(item))],
+              body: [...bodyContent.map((service) => Object.values(service))],
             },
           },
 
@@ -395,7 +399,7 @@
             ],
           },
         ],
-        pageMargins: [2, 0, 2, 5],
+        pageMargins: [0, 0, 2, 5],
         pageSize: {
           width: 150,
           // width: '4 932.28346',
@@ -449,7 +453,6 @@
         toast.success(response.message)
         confirmModal.value = false
         emit("close", false)
-
         await onGenPDF(response.data).then(async (file: any) => {
           const buffer = await file.bufferPromise
           const blob = new Blob([buffer], { type: "application/pdf" })
@@ -460,7 +463,6 @@
               `transaction/saveInv/${response.data?.paymentCode}`,
               formData
             )
-
             setTimeout(async () => {
               window.location.reload()
             }, 2000)
@@ -514,7 +516,7 @@
       <Dialog.Description>
         <div class="grid gap-6">
           <!--  -->
-          <div class="grid">
+          <div class="grid" ref="contentToPrint">
             <table class="table-auto hover:table-fixed">
               <tr>
                 <th class="text-start pb-2 border-b border-gray-200">No</th>

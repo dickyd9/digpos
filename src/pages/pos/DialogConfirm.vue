@@ -36,10 +36,16 @@
 
   const employeeList = ref<IEmployee[]>([])
   const chooseEmployee = ref([])
-  const getData = async () => {
+  const getData = async (keyword: string) => {
     try {
-      const response = await fetchWrapper.get("employee")
+      const response = await fetchWrapper.get("pos/employee-list", { keyword })
       employeeList.value = response?.data as IEmployee[]
+      list.value = response.map((item: any) => {
+        return {
+          value: `${item.employeeCode}`,
+          label: `${item.employeeName}`,
+        }
+      })
     } catch (error) {}
   }
 
@@ -58,11 +64,45 @@
     cart.employeeCode = employeeCode
   }
 
+  interface ListItem {
+    value: string
+    label: string
+  }
+
+  const list = ref<ListItem[]>([])
+  const options = ref<ListItem[]>([])
+  const value = ref<string[]>([])
+  const loading = ref(false)
+
+  const remoteMethod = async (query: string) => {
+    await getData(query)
+
+    if (query) {
+      loading.value = true
+
+      setTimeout(() => {
+        loading.value = false
+        options.value = list.value.filter((item) => {
+          return item.label.toLowerCase().includes(query.toLowerCase())
+        })
+      }, 200)
+    } else {
+      options.value = []
+    }
+  }
+
   const saveData = async () => {
     try {
+      const cartData = props?.dataOrder?.carts.map((cart: any) => {
+        return {
+          employeeCode: cart.employeeCode,
+          amount: cart.amount,
+          serviceCode: cart.servicesCode,
+        }
+      })
       const response = await fetchWrapper.put(
         `transaction/${props?.dataOrder?.paymentCode}`,
-        { data: props?.dataOrder?.carts }
+        { data: cartData }
       )
       toast.success(response.message)
       confirmModal.value = false
@@ -77,16 +117,16 @@
     }
   }
 
-  watch(
-    () => props.processTransaction,
-    (newValue) => {
-      if (newValue) {
-        setTimeout(() => {
-          getData()
-        }, 20)
-      }
-    }
-  )
+  // watch(
+  //   () => props.processTransaction,
+  //   (newValue) => {
+  //     if (newValue) {
+  //       setTimeout(() => {
+  //         getData()
+  //       }, 20)
+  //     }
+  //   }
+  // )
 </script>
 
 <template>
@@ -105,21 +145,38 @@
           <a
             v-for="(cart, index) in props?.dataOrder?.carts"
             :key="index"
-            class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
+            class="intro-x grid items-center gap-3 !box max-h-fit p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
             <div class="grid grid-cols-2 items-center">
               <div>
-                <div class="max-w-[50%] truncate mr-1">{{ cart.itemName }}</div>
+                <div class="max-w-[50%] truncate mr-1">
+                  {{ cart.servicesName }}
+                </div>
 
                 <div class="flex gap-2">
                   <div class="text-slate-500">{{ cart.amount }}X</div>
                   <div class="font-medium">
-                    Rp. {{ formatCurrency(cart.itemPrice) }}
+                    Rp. {{ formatCurrency(cart.servicesPrice) }}
                   </div>
                 </div>
               </div>
 
               <div class="m-2 grid gap-2">
-                <TomSelect
+                <el-select
+                  v-model="cart.employeeCode"
+                  class="w-full"
+                  filterable
+                  remote
+                  reserve-keyword
+                  placeholder="Tuliskan Nama Karyawab ..."
+                  :remote-method="remoteMethod"
+                  :loading="loading">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value" />
+                </el-select>
+                <!-- <TomSelect
                   :modelValue="cart?.employeeCode"
                   style="border: 1px !important"
                   :options="{
@@ -135,7 +192,7 @@
                     :key="index">
                     {{ employee.employeeName }}
                   </option>
-                </TomSelect>
+                </TomSelect> -->
               </div>
             </div>
           </a>
@@ -155,12 +212,16 @@
             <tr>
               <th>Nama Customer</th>
               <td>:</td>
-              <td>{{props?.dataOrder?.customerName}}</td>
+              <td>{{ props?.dataOrder?.customerName }}</td>
             </tr>
             <tr>
               <th>Tanggal Transaksi</th>
               <td>:</td>
-              <td>{{ formatDate(props.dataOrder?.transactionDate, "DD - MMMM - YY") }}</td>
+              <td>
+                {{
+                  formatDate(props.dataOrder?.transactionDate, "DD - MMMM - YY")
+                }}
+              </td>
             </tr>
           </table>
           <table class="w-full text-left">

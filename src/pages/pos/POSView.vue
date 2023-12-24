@@ -59,9 +59,9 @@
     let totalPoint = 0
 
     carts.value.forEach((cart: any) => {
-      subtotal += cart.itemPrice * cart.amount
+      subtotal += cart.servicesPrice * cart.amount
       totalItem += cart.amount
-      totalPoint += cart.itemPoint * cart.amount
+      totalPoint += cart.servicesPoint * cart.amount
     })
 
     priceMeta.value.subtotal = subtotal
@@ -104,26 +104,28 @@
   const addCart = (item: IService) => {
     if (!paymentStorage) {
       toast.error("Silahkan buat pesanan baru!")
+      return
+    }
+
+    const existingItem = carts.value.find(
+      (cartItem) => cartItem.servicesCode === item.servicesCode
+    )
+    if (existingItem) {
+      // existingItem
+      existingItem.amount += 1
     } else {
-      const existingItem = carts.value.find(
-        (cartItem) => cartItem.servicesCode === item.servicesCode
-      )
-      if (existingItem) {
-        // Jika item sudah ada, tambahkan kuantitasnya
-        existingItem
-      } else {
-        // Jika item belum ada, tambahkan item baru ke dalam keranjang
-        carts.value.push({
-          servicesCode: item.servicesCode,
-          servicesName: item.servicesName,
-          servicesPrice: item.servicesPrice,
-          servicesPoint: item.servicesPoint,
-          employeeCode: null,
-          amount: 1,
-        })
-      }
+      // Jika item belum ada, tambahkan item baru ke dalam keranjang
+      carts.value.push({
+        servicesCode: item.servicesCode,
+        servicesName: item.servicesName,
+        servicesPrice: item.servicesPrice,
+        servicesPoint: item.servicesPoint,
+        employeeCode: null,
+        amount: 1,
+      })
     }
   }
+
   const clearItem = (item: ICart) => {
     const index = carts.value.findIndex(
       (itm) => itm.servicesCode === item.servicesCode
@@ -167,12 +169,12 @@
   const invoiceModal = ref(false)
   let paymentUpdateData = ref<ILastTransaction>()
   const paymentUpdate = (value: any) => {
-    paymentUpdateData.value = value as ILastTransaction
-    paymentUpdateModal.value = true
-    // if (value?.paymentStatus !== "PAID") {
-    //   paymentUpdateData.value = value as ILastTransaction
-    //   paymentUpdateModal.value = true
-    // }
+    // paymentUpdateData.value = value as ILastTransaction
+    // paymentUpdateModal.value = true
+    if (value?.paymentStatus !== "PAID") {
+      paymentUpdateData.value = value as ILastTransaction
+      paymentUpdateModal.value = true
+    }
   }
 
   // Delete Item
@@ -185,7 +187,7 @@
   const lastTransaction = ref<ILastTransaction[]>([])
   const getLastTransaction = async () => {
     try {
-      const response = await fetchWrapper.get("transaction/payment")
+      const response = await fetchWrapper.get("pos/last-trx")
       lastTransaction.value = response as ILastTransaction[]
     } catch (error) {}
   }
@@ -203,7 +205,7 @@
 
   interface TabMenu extends IService {
     categoryName: string
-    services: object[] | IService[]
+    services: IService[]
   }
 
   const tab = ref<TabMenu[]>([])
@@ -263,7 +265,7 @@
         <!-- New Trx -->
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
-            <h2 class="mr-auto text-lg font-medium">Transaksi Terakhir</h2>
+            <h2 class="mr-auto text-lg font-medium">Transaksi Hari Ini</h2>
           </div>
           <div
             :class="
@@ -370,10 +372,9 @@
                   v-for="(srHead, index) in tab"
                   :key="index"
                   class="grid grid-cols-12 gap-5 leading-relaxed">
-                  <a
-                    href="#"
+                  <div
                     v-for="(services, index) in srHead.services"
-                    @click="addCart(srHead)"
+                    @click="addCart(services)"
                     class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
                     <el-tooltip
                       class="box-item"
@@ -395,7 +396,7 @@
                         </div>
                       </div>
                     </el-tooltip>
-                  </a>
+                  </div>
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
@@ -422,17 +423,13 @@
         </div>
         <a
           v-for="(cart, index) in carts"
-          href="#"
           :key="index"
           class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
           <div class="flex items-center">
-            <div class="max-w-[50%] truncate mr-4">
-              {{ cart.servicesName }}
-            </div>
-            <!-- <div class="text-slate-500">{{ cart.amount }}X</div> -->
             <div
               class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
-              <button
+              <el-input-number v-model="cart.amount" min="1" max="100" size="medium" />
+              <!-- <button
                 @click="
                   () => {
                     counting('min', cart)
@@ -449,7 +446,10 @@
                 @click="counting('plus', cart)"
                 class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-6 w-6 rounded-r cursor-pointer">
                 +
-              </button>
+              </button> -->
+            </div>
+            <div class="max-w-[50%] truncate ml-4">
+              {{ cart.servicesName }}
             </div>
             <div class="ml-auto font-medium">
               Rp. {{ formatCurrency(cart.servicesPrice) }}

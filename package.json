@@ -53,6 +53,7 @@
     "toastify-js": "^1.12.0",
     "tom-select": "^2.2.0",
     "vue": "^3.3.4",
+    "vue-html-to-paper": "^2.0.3",
     "vue-query": "^1.26.0",
     "vue-router": "^4.1.6",
     "vue3-html2pdf": "^1.1.2",

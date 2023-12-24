@@ -55,23 +55,18 @@
     createCustomer.value.customerDOB = new Date(value)
   }
 
-  const getData = async () => {
+  const getData = async (keyword: any) => {
     try {
-      const response = await fetchWrapper.get("customer/all")
+      const response = await fetchWrapper.get("pos/customer-list", { keyword })
       customerList.value = response as ICustomer[]
+      list.value = response.map((item: any) => {
+        return {
+          value: `${item.customerCode}`,
+          label: `${item.customerName}`,
+        }
+      })
     } catch (error) {}
   }
-
-  watch(
-    () => props.newOrderModal,
-    (newValue) => {
-      if (newValue) {
-        setTimeout(() => {
-          getData()
-        }, 20)
-      }
-    }
-  )
 
   const tabs = ref([
     {
@@ -90,6 +85,33 @@
     emit("close", false)
     activeTab.value = "choose"
     chooseCustomer.customerCode = ""
+  }
+
+  interface ListItem {
+    value: string
+    label: string
+  }
+
+  const list = ref<ListItem[]>([])
+  const options = ref<ListItem[]>([])
+  const value = ref<string[]>([])
+  const loading = ref(false)
+
+  const remoteMethod = async (query: string) => {
+    await getData(query)
+
+    if (query) {
+      loading.value = true
+
+      setTimeout(() => {
+        loading.value = false
+        options.value = list.value.filter((item) => {
+          return item.label.toLowerCase().includes(query.toLowerCase())
+        })
+      }, 200)
+    } else {
+      options.value = []
+    }
   }
 
   const saveData = async () => {
@@ -164,7 +186,22 @@
           <Tab.Panels>
             <Tab.Panel>
               <div class="my-4 !box">
-                <TomSelect
+                <el-select
+                  v-model="chooseCustomer.customerCode"
+                  class="w-full"
+                  filterable
+                  remote
+                  reserve-keyword
+                  placeholder="Tuliskan Nama Pelanggan ..."
+                  :remote-method="remoteMethod"
+                  :loading="loading">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value" />
+                </el-select>
+                <!-- <TomSelect
                   v-model="chooseCustomer.customerCode"
                   style="border: 1px !important"
                   :options="{
@@ -177,7 +214,7 @@
                     :key="index">
                     {{ customer.customerName }}
                   </option>
-                </TomSelect>
+                </TomSelect> -->
               </div>
             </Tab.Panel>
             <Tab.Panel>
