@@ -1,6 +1,6 @@
 {
-  "name": "pos-digvation",
-  "version": "0.0.1",
+  "name": "pos-nova-beauty-salon",
+  "version": "0.0.9",
   "private": true,
   "scripts": {
     "build": "echo $VITE_API_URL vue-tsc && vite build",
