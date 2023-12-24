@@ -7,7 +7,6 @@ const base_url = import.meta.env.VITE_API_URL as string
 
 const axiosInstance = axios.create({
   baseURL: `https://api.nova-beauty-salon.digvation.id/api` || `${base_url}/api`,
-  // baseURL: `${base_url}/api`,
   withCredentials: false,
   headers: {
     "Access-Control-Allow-Origin": "*",
