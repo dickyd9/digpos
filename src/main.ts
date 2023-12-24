@@ -13,6 +13,7 @@ import "@bhplugin/vue3-datatable/dist/style.css"
 import piniaPersist from "pinia-plugin-persist"
 import { PDFPlugin } from "vue3-pdfmake"
 import VueHtmlToPaper from "vue-html-to-paper"
+import * as ElementPlusIconsVue from "@element-plus/icons-vue"
 
 const options = {
   name: "_blank",
@@ -29,14 +30,19 @@ const options = {
 const pinia = createPinia()
 pinia.use(piniaPersist)
 
-createApp(App)
-  .use(router)
-  .use(PDFPlugin)
-  .use(pinia)
-  .use(ElementPlus)
-  .use(VueHtmlToPaper, options)
-  .use(Vue3Toastify, {
-    autoClose: 2000,
-  } as ToastContainerOptions)
-  .component("Vue3Datatable", Vue3Datatable)
-  .mount("#app")
+const app = createApp(App)
+
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+
+app.use(router)
+app.use(PDFPlugin)
+app.use(pinia)
+app.use(ElementPlus)
+app.use(VueHtmlToPaper, options)
+app.use(Vue3Toastify, {
+  autoClose: 2000,
+} as ToastContainerOptions)
+app.component("Vue3Datatable", Vue3Datatable)
+app.mount("#app")

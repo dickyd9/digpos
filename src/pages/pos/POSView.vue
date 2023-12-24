@@ -209,10 +209,14 @@
   }
 
   const tab = ref<TabMenu[]>([])
-
-  const getData = async (category: any) => {
+  const keyword = ref(null)
+  const searchItem = _.debounce(async function (value: any) {
+    keyword.value = value
+    await getData(keyword.value)
+  }, 200)
+  const getData = async (keyword: any) => {
     try {
-      const data: IService[] = await fetchWrapper.get(`pos/menu`)
+      const data: IService[] = await fetchWrapper.get(`pos/menu`, { keyword })
       const dataCategory = await fetchWrapper.get("pos/services-category")
 
       const groupedItemsByCategory: { [key: string]: any[] } = {}
@@ -266,6 +270,9 @@
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
             <h2 class="mr-auto text-lg font-medium">Transaksi Hari Ini</h2>
+            <button>
+              <Filter style="width: 2em; height: 2em; margin-right: 8px" />
+            </button>
           </div>
           <div
             :class="
@@ -336,6 +343,7 @@
           <div class="lg:flex intro-y">
             <div class="relative">
               <FormInput
+                @update:modelValue="searchItem"
                 type="text"
                 class="w-full px-4 py-3 pr-10 lg:w-64 !box"
                 placeholder="Search item..." />
@@ -368,36 +376,38 @@
                 </Tab>
               </Tab.List>
               <Tab.Panels class="mt-5">
-                <Tab.Panel
-                  v-for="(srHead, index) in tab"
-                  :key="index"
-                  class="grid grid-cols-12 gap-5 leading-relaxed">
-                  <div
-                    v-for="(services, index) in srHead.services"
-                    @click="addCart(services)"
-                    class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
-                    <el-tooltip
-                      class="box-item"
-                      effect="dark"
-                      :content="(services as any).servicesName"
-                      placement="top-start">
-                      <div class="flex p-3 rounded-md box zoom-in">
-                        <div class="block font-medium truncate">
-                          <a href="" class="font-medium whitespace-nowrap">
-                            {{ (services as any).servicesName }}
-                          </a>
-                          <div
-                            class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                            {{
-                              "Rp. " +
-                              formatCurrency((services as any).servicesPrice)
-                            }}
+                <el-scrollbar height="400px">
+                  <Tab.Panel
+                    v-for="(srHead, index) in tab"
+                    :key="index"
+                    class="grid grid-cols-12 gap-5 leading-relaxed">
+                    <div
+                      v-for="(services, index) in srHead.services"
+                      @click="addCart(services)"
+                      class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+                      <el-tooltip
+                        class="box-item"
+                        effect="dark"
+                        :content="(services as any).servicesName"
+                        placement="top-start">
+                        <div class="flex p-3 rounded-md box zoom-in">
+                          <div class="block font-medium truncate">
+                            <a href="" class="font-medium whitespace-nowrap">
+                              {{ (services as any).servicesName }}
+                            </a>
+                            <div
+                              class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                              {{
+                                "Rp. " +
+                                formatCurrency((services as any).servicesPrice)
+                              }}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </el-tooltip>
-                  </div>
-                </Tab.Panel>
+                      </el-tooltip>
+                    </div>
+                  </Tab.Panel>
+                </el-scrollbar>
               </Tab.Panels>
             </Tab.Group>
           </div>
@@ -428,7 +438,11 @@
           <div class="flex items-center">
             <div
               class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
-              <el-input-number v-model="cart.amount" min="1" max="100" size="medium" />
+              <el-input-number
+                v-model="cart.amount"
+                min="1"
+                max="100"
+                size="medium" />
               <!-- <button
                 @click="
                   () => {

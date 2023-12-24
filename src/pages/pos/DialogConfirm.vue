@@ -141,11 +141,11 @@
       </Dialog.Title>
       <!-- <Dialog.Description class="flex gap-3 max-h-96 overflow-auto"> -->
       <Dialog.Description>
-        <div class="grid gap-2 h-44 overflow-auto">
+        <el-scrollbar max-height="200px">
           <a
             v-for="(cart, index) in props?.dataOrder?.carts"
             :key="index"
-            class="intro-x grid items-center gap-3 !box max-h-fit p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
+            class="intro-x grid items-center gap-3 mb-2 !box max-h-fit p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
             <div class="grid grid-cols-2 items-center">
               <div>
                 <div class="max-w-[50%] truncate mr-1">
@@ -176,27 +176,12 @@
                     :label="item.label"
                     :value="item.value" />
                 </el-select>
-                <!-- <TomSelect
-                  :modelValue="cart?.employeeCode"
-                  style="border: 1px !important"
-                  :options="{
-                    placeholder: 'Pilih Karyawan',
-                  }"
-                  @update:modelValue="(employeeCode: any) => {
-                    updateEmployee(employeeCode, cart)
-                  }"
-                  class="w-full box">
-                  <option
-                    :value="employee.employeeCode"
-                    v-for="(employee, index) in employeeList"
-                    :key="index">
-                    {{ employee.employeeName }}
-                  </option>
-                </TomSelect> -->
               </div>
             </div>
           </a>
-        </div>
+        </el-scrollbar>
+        <!-- <div class="grid gap-2 h-44 overflow-auto"> -->
+        <!-- </div> -->
         <div
           class="flex py-4 mt-4"
           style="
