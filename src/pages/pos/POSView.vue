@@ -26,6 +26,8 @@
   import DialogConfirm from "./DialogConfirm.vue"
   import DialogPaymentUpdate from "./DialogPaymentUpdate.vue"
   import DialogInvoice from "./DialogInvoice.vue"
+  import Cart from "./Cart.vue"
+  import type { TabsPaneContext } from "element-plus"
 
   const params = reactive({
     keyword: "",
@@ -192,13 +194,6 @@
     } catch (error) {}
   }
 
-  const tabClick = async (name: string, index: number) => {
-    try {
-      // const data: IService = await getData(name)
-      // serviceItem.value = data
-    } catch (error) {}
-  }
-
   const deleteAllItem = () => {
     carts.value = []
   }
@@ -209,6 +204,14 @@
   }
 
   const tab = ref<TabMenu[]>([])
+  const tabActive = ref("All")
+
+  const tabClick = async (tab: TabsPaneContext, event: Event) => {
+    try {
+      console.log(tab, event)
+    } catch (error) {}
+  }
+
   const keyword = ref(null)
   const searchItem = _.debounce(async function (value: any) {
     keyword.value = value
@@ -252,11 +255,8 @@
     }
   }
 
-  const activeTab = ref(0)
-
   onMounted(() => {
     getData("")
-    // getCategory()
     getLastTransaction()
   })
 </script>
@@ -270,9 +270,6 @@
         <div class="grid">
           <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
             <h2 class="mr-auto text-lg font-medium">Transaksi Hari Ini</h2>
-            <button>
-              <Filter style="width: 2em; height: 2em; margin-right: 8px" />
-            </button>
           </div>
           <div
             :class="
@@ -336,11 +333,10 @@
           </div>
         </div>
 
+        <!-- Mennu -->
         <div class="grid">
-          <div class="flex flex-col items-center mb-8 intro-y sm:flex-row">
-            <h2 class="mr-auto text-lg font-medium">Cashier</h2>
-          </div>
-          <div class="lg:flex intro-y">
+          <div class="flex flex-col items-center mb-2 intro-y sm:flex-row">
+            <h2 class="mr-auto text-3xl font-medium">Menu</h2>
             <div class="relative">
               <FormInput
                 @update:modelValue="searchItem"
@@ -351,173 +347,62 @@
                 icon="Search"
                 class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 text-slate-500" />
             </div>
-            <FormSelect
-              @input="(value: any) => {
-                console.log(value.target.value)
-              }"
-              class="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
-              <option>Sort By</option>
-              <option value="asc">A to Z</option>
-              <option value="desc">Z to A</option>
-              <option value="c">Lowest Price</option>
-              <option value="d">Highest Price</option>
-            </FormSelect>
           </div>
-          <div class="pt-5 mt-5 border-t">
-            <Tab.Group>
-              <Tab.List variant="boxed-tabs">
-                <Tab v-for="(header, index) in tab" :key="index">
-                  <Tab.Button
-                    @click="tabClick(header.categoryName, index)"
-                    class="w-full py-2"
-                    as="button">
-                    {{ header.categoryName }}
-                  </Tab.Button>
-                </Tab>
-              </Tab.List>
-              <Tab.Panels class="mt-5">
-                <el-scrollbar height="400px">
-                  <Tab.Panel
-                    v-for="(srHead, index) in tab"
-                    :key="index"
-                    class="grid grid-cols-12 gap-5 leading-relaxed">
-                    <div
-                      v-for="(services, index) in srHead.services"
-                      @click="addCart(services)"
-                      class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
-                      <el-tooltip
-                        class="box-item"
-                        effect="dark"
-                        :content="(services as any).servicesName"
-                        placement="top-start">
-                        <div class="flex p-3 rounded-md box zoom-in">
-                          <div class="block font-medium truncate">
-                            <a href="" class="font-medium whitespace-nowrap">
-                              {{ (services as any).servicesName }}
-                            </a>
-                            <div
-                              class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                              {{
-                                "Rp. " +
-                                formatCurrency((services as any).servicesPrice)
-                              }}
-                            </div>
-                          </div>
+          <el-tabs
+            v-model="tabActive"
+            type="card"
+            class="demo-tabs"
+            @tab-click="tabClick">
+            <el-scrollbar height="60vh">
+              <el-tab-pane
+                class="grid grid-cols-12 gap-5 leading-relaxed"
+                v-for="(item, index) in tab"
+                :key="index"
+                :label="item.categoryName"
+                :name="item.categoryName">
+                <div
+                  v-for="(services, index) in item.services"
+                  @click="addCart(services)"
+                  class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
+                  <el-tooltip
+                    class="box-item"
+                    effect="dark"
+                    :content="(services as any).servicesName"
+                    placement="top-start">
+                    <div class="flex p-3 rounded-md box zoom-in">
+                      <div class="block font-medium truncate">
+                        <a href="" class="font-medium whitespace-nowrap">
+                          {{ (services as any).servicesName }}
+                        </a>
+                        <div
+                          class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                          {{
+                            "Rp. " +
+                            formatCurrency((services as any).servicesPrice)
+                          }}
                         </div>
-                      </el-tooltip>
+                      </div>
                     </div>
-                  </Tab.Panel>
-                </el-scrollbar>
-              </Tab.Panels>
-            </Tab.Group>
-          </div>
+                  </el-tooltip>
+                </div>
+              </el-tab-pane>
+            </el-scrollbar>
+          </el-tabs>
         </div>
       </div>
     </div>
     <!-- END: Item List -->
-    <!-- BEGIN: Ticket -->
-    <div class="flex-none w-1/3 max-h-screen overflow-auto">
-      <div class="flex justify-between p-5 box">
-        <strong>No Order: </strong>
-        <strong
-          >#{{
-            paymentData.paymentCode ? paymentData.paymentCode : "####"
-          }}</strong
-        >
-      </div>
-      <div class="p-2 mt-5 box grid gap-3">
-        <div
-          class="p-2 flex justify-center"
-          style="border-bottom: 1px solid #0000001a">
-          <strong>Keranjang</strong>
-        </div>
-        <a
-          v-for="(cart, index) in carts"
-          :key="index"
-          class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
-          <div class="flex items-center">
-            <div
-              class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
-              <el-input-number
-                v-model="cart.amount"
-                min="1"
-                max="100"
-                size="medium" />
-              <!-- <button
-                @click="
-                  () => {
-                    counting('min', cart)
-                  }
-                "
-                class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-6 w-6 rounded-l cursor-pointer outline-none">
-                -
-              </button>
-              <p
-                class="outline-none text-center h-6 w-6 bg-gray-300 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center justify-center text-gray-700">
-                {{ cart.amount }}
-              </p>
-              <button
-                @click="counting('plus', cart)"
-                class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-6 w-6 rounded-r cursor-pointer">
-                +
-              </button> -->
-            </div>
-            <div class="max-w-[50%] truncate ml-4">
-              {{ cart.servicesName }}
-            </div>
-            <div class="ml-auto font-medium">
-              Rp. {{ formatCurrency(cart.servicesPrice) }}
-            </div>
-            <button class="rounded border ml-2 hover:bg-red-700">
-              <Lucide
-                @click="clearItem(cart)"
-                icon="X"
-                class="w-4 h-4 text-slate-500 hover:text-white" />
-            </button>
-          </div>
-        </a>
-        <p v-if="!carts.length" class="text-center p-3 text-slate-300">
-          Keranjang masih kosong,
-          <br />
-          Silahkan Pilih Menu
-        </p>
-      </div>
-      <div class="p-5 mt-5 box">
-        <div class="flex">
-          <div class="mr-auto">Total Item</div>
-          <div class="font-medium">
-            {{ priceMeta.totalItem }}
-          </div>
-        </div>
-        <div class="flex mt-4">
-          <div class="mr-auto">Total Point</div>
-          <div class="font-medium">{{ priceMeta.totalPoint }}</div>
-        </div>
-        <div
-          class="flex pt-4 mt-4 border-t border-slate-200/60 dark:border-darkmode-400">
-          <div class="mr-auto text-base font-medium">Subtotal</div>
-          <div class="text-base font-medium">
-            Rp.
-            {{
-              priceMeta.subtotal != 0
-                ? formatCurrency(priceMeta.subtotal)
-                : priceMeta.subtotal
-            }}
-          </div>
-        </div>
-      </div>
-      <div class="flex mt-5">
-        <Button
-          @click="deleteAllItem"
-          class="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500">
-          Hapus Item
-        </Button>
-        <Button @click="pay" variant="primary" class="w-32 ml-auto shadow-md">
-          Proses
-        </Button>
-      </div>
-    </div>
-    <!-- END: Ticket -->
+
+    <!-- BEGIN: Cart -->
+    <Cart
+      class="flex-none"
+      :childCarts="carts"
+      :price="priceMeta"
+      @clearItem="clearItem"
+      @delete-all-item="deleteAllItem"
+      @pay="pay" />
+    <!-- END: Cart -->
+
     <Dialog
       :open="deleteConfirmationModal"
       @close="
@@ -581,3 +466,16 @@
     @close="invoiceModal = false" />
   <!-- END: Dialog Proccess -->
 </template>
+
+<style scoped>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .category-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .category-list {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>

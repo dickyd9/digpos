@@ -49,7 +49,7 @@
     if (validate.value.$invalid) {
       setTimeout(() => {
         loading.value = false
-      }, 250)
+      }, 50)
       await toast.error("Terjadi Kesalahan")
     } else {
       try {
