@@ -526,18 +526,18 @@
                 <th class="text-start pb-2 border-b border-gray-200">Total</th>
               </tr>
 
-              <tr v-for="(pay, index) in props?.dataPayment?.items" key="index">
+              <tr v-for="(pay, index) in props?.dataPayment?.services" key="index">
                 <td class="text-start py-2 border-b border-gray-200">
                   {{ index + 1 }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
-                  {{ pay.itemName }}
+                  {{ pay.servicesName }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
-                  {{ "Rp. " + formatCurrency(pay.itemPrice) }}
+                  {{ "Rp. " + formatCurrency(pay.servicesPrice) }}
                 </td>
                 <td class="text-center py-2 border-b border-gray-200">
-                  {{ pay.itemAmount }}
+                  {{ pay.servicesAmount }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
                   {{ "Rp. " + formatCurrency(pay.totalPrice) }}

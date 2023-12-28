@@ -164,6 +164,7 @@
     // paymentUpdateData.value = value as ILastTransaction
     // paymentUpdateModal.value = true
     if (value?.paymentStatus !== "PAID") {
+      console.log(value)
       paymentUpdateData.value = value as ILastTransaction
       paymentUpdateModal.value = true
     }
