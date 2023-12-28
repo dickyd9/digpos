@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import _, { debounce } from "lodash"
-  import { onMounted, reactive, ref, watch } from "vue"
+  import { onMounted, reactive, ref, unref, toRefs, watch } from "vue"
   import fakerData from "@/utils/faker"
   import Button from "@/base-components/Button"
   import {
@@ -28,6 +28,7 @@
   import DialogInvoice from "./DialogInvoice.vue"
   import Cart from "./Cart.vue"
   import type { TabsPaneContext } from "element-plus"
+  import { useCartsStore } from "@/stores/cart.store"
 
   const params = reactive({
     keyword: "",
@@ -45,7 +46,7 @@
     getData("")
   }
   const serviceItem = ref<IService[]>([])
-  let carts = ref<ICart[]>([])
+  const carts = ref<ICart[]>([])
   const transactionData = ref<ITransaction>()
 
   const priceMeta = ref({
@@ -132,19 +133,8 @@
     const index = carts.value.findIndex(
       (itm) => itm.servicesCode === item.servicesCode
     )
-
     if (index !== -1) {
       carts.value.splice(index, 1)
-    }
-  }
-
-  const counting = (value: string, initValue: any) => {
-    if (value === "plus") {
-      initValue.amount++
-    } else {
-      if (initValue.amount != 0) {
-        initValue.amount--
-      }
     }
   }
 
@@ -361,8 +351,9 @@
                 :label="item.categoryName"
                 :name="item.categoryName">
                 <div
-                  v-for="(services, index) in item.services"
                   @click="addCart(services)"
+                  v-for="(services, index) in item.services"
+                  :key="services.servicesName"
                   class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
                   <el-tooltip
                     class="box-item"
@@ -371,9 +362,9 @@
                     placement="top-start">
                     <div class="flex p-3 rounded-md box zoom-in">
                       <div class="block font-medium truncate">
-                        <a href="" class="font-medium whitespace-nowrap">
+                        <div href="" class="font-medium whitespace-nowrap">
                           {{ (services as any).servicesName }}
-                        </a>
+                        </div>
                         <div
                           class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
                           {{
