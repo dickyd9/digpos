@@ -3,6 +3,7 @@
   import { formatCurrency, formatDate } from "@/utils/helper"
   import Button from "@/base-components/Button"
   import { computed, ref } from "vue"
+  import Lucide from "@/base-components/Lucide"
 
   const props = defineProps({
     childCarts: Object,
@@ -16,6 +17,11 @@
   }>()
 
   // Carts Data
+  const action = ref({
+    min: 1,
+    max: 100,
+    size: 'default'
+  })
   const carts = computed(() => {
     return props.childCarts
   })
@@ -76,9 +82,10 @@
             class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
             <el-input-number
               v-model="cart.amount"
-              min="1"
-              max="100"
-              size="medium" />
+              :min="action.min"
+              :max="action.max"
+              :size="action.size" 
+            />
           </div>
           <div class="max-w-[50%] truncate ml-4">
             {{ cart.servicesName }}
