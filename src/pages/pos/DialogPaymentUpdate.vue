@@ -399,7 +399,7 @@
             ],
           },
         ],
-        pageMargins: [0, 0, 2, 5],
+        pageMargins: [-3, 0, 2, 5],
         pageSize: {
           width: 150,
           // width: '4 932.28346',
