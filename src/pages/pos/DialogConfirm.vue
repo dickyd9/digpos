@@ -95,11 +95,12 @@
     try {
       const cartData = props?.dataOrder?.carts.map((cart: any) => {
         return {
-          employeeCode: cart.employeeCode,
+          employeeCode: cart.employeeCode || "",
           amount: cart.amount,
-          serviceCode: cart.servicesCode,
+          itemCode: cart.itemCode,
         }
       })
+
       const response = await fetchWrapper.put(
         `transaction/${props?.dataOrder?.paymentCode}`,
         { data: cartData }
@@ -149,25 +150,25 @@
             <div class="grid grid-cols-2 items-center">
               <div>
                 <div class="max-w-[50%] truncate mr-1">
-                  {{ cart.servicesName }}
+                  {{ cart.itemName }}
                 </div>
 
                 <div class="flex gap-2">
                   <div class="text-slate-500">{{ cart.amount }}X</div>
                   <div class="font-medium">
-                    Rp. {{ formatCurrency(cart.servicesPrice) }}
+                    Rp. {{ formatCurrency(cart.itemPrice) }}
                   </div>
                 </div>
               </div>
 
-              <div class="m-2 grid gap-2">
+              <div v-if="cart.itemType !== 'product'" class="m-2 grid gap-2">
                 <el-select
                   v-model="cart.employeeCode"
                   class="w-full"
                   filterable
                   remote
                   reserve-keyword
-                  placeholder="Tuliskan Nama Karyawab ..."
+                  placeholder="Tuliskan Nama Karyawan ..."
                   :remote-method="remoteMethod"
                   :loading="loading">
                   <el-option

@@ -13,7 +13,7 @@ export const useCartsStore = defineStore({
       const cartsFromLocalStorage = localStorage.getItem("carts")
       
       const existingItem = this.carts.find(
-        (cartItem) => cartItem.servicesCode === item.servicesCode
+        (cartItem) => cartItem.itemCode === item.itemCode
       )
 
       if (existingItem) {
@@ -22,10 +22,10 @@ export const useCartsStore = defineStore({
       } else {
         // Jika item belum ada, tambahkan item baru ke dalam keranjang
         this.carts.push({
-          servicesCode: item.servicesCode,
-          servicesName: item.servicesName,
-          servicesPrice: item.servicesPrice,
-          servicesPoint: item.servicesPoint,
+          itemCode: item.itemCode,
+          itemName: item.itemName,
+          itemPrice: item.itemPrice,
+          itemPoint: item.itemPoint,
           employeeCode: null,
           amount: 1,
         })

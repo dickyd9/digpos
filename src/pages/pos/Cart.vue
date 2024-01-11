@@ -88,10 +88,10 @@
             />
           </div>
           <div class="max-w-[50%] truncate ml-4">
-            {{ cart.servicesName }}
+            {{ cart.itemName }}
           </div>
           <div class="ml-auto font-medium">
-            Rp. {{ formatCurrency(cart.servicesPrice) }}
+            Rp. {{ formatCurrency(cart.itemPrice) }}
           </div>
           <button class="rounded border ml-2 hover:bg-red-700">
             <Lucide

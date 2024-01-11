@@ -87,25 +87,26 @@
 
   const onGenPDF = async (data: any) => {
     try {
-      const items = data?.services
+      console.log(data)
+      const items = data?.items
       const bodyContent: Object[] = []
 
       if (items && items.length > 0) {
         items.forEach((item: any, index: any) => {
-          const { serviceName, servicePrice, serviceAmount, totalPrice } = item
+          const { itemName, itemPrice, itemAmount, totalPrice } = item
 
-          const total = servicePrice * serviceAmount
+          const total = itemPrice * itemAmount
 
           bodyContent.push([
             {
               stack: [
-                serviceName,
+                itemName,
                 {
                   text:
-                    serviceAmount +
+                    itemAmount +
                     " x " +
-                    (servicePrice
-                      ? "Rp. " + formatCurrency(servicePrice)
+                    (itemPrice
+                      ? "Rp. " + formatCurrency(itemPrice)
                       : "Rp. 0"),
                 },
               ],
@@ -259,7 +260,7 @@
             table: {
               headerRows: 1,
               widths: ["50%", "*"],
-              body: [...bodyContent.map((service) => Object.values(service))],
+              body: [...bodyContent.map((item) => Object.values(item))],
             },
           },
 
@@ -410,18 +411,19 @@
 
       const pdf = pdfMake.createPdf(docDefinition)
 
-      // pdf.getBlob(async (blob: Blob) => {
-      //   const formData = new FormData()
-      //   formData.append("file", blob, `${data?.invoice}.pdf`)
-      //   try {
-      //     await fetchWrapper.post(
-      //       `transaction/saveInv/${data?.paymentCode}`,
-      //       formData
-      //     )
-      //   } catch (error) {
-      //     console.error("Gagal mengirim file PDF:")
-      //   }
-      // })
+      pdf.getBlob(async (blob: Blob) => {
+        const formData = new FormData()
+        formData.append("file", blob, `${data?.invoice}.pdf`)
+        try {
+          await fetchWrapper.post(
+            `transaction/saveInv/${data?.paymentCode}`,
+            formData
+          )
+        } catch (error) {
+          console.error("Gagal mengirim file PDF:")
+        }
+      })
+
       pdf.open()
 
       return pdf
@@ -526,18 +528,18 @@
                 <th class="text-start pb-2 border-b border-gray-200">Total</th>
               </tr>
 
-              <tr v-for="(pay, index) in props?.dataPayment?.services" key="index">
+              <tr v-for="(pay, index) in props?.dataPayment?.items" key="index">
                 <td class="text-start py-2 border-b border-gray-200">
                   {{ index + 1 }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
-                  {{ pay.servicesName }}
+                  {{ pay.itemName }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
-                  {{ "Rp. " + formatCurrency(pay.servicesPrice) }}
+                  {{ "Rp. " + formatCurrency(pay.itemPrice) }}
                 </td>
                 <td class="text-center py-2 border-b border-gray-200">
-                  {{ pay.servicesAmount }}
+                  {{ pay.itemAmount }}
                 </td>
                 <td class="text-start py-2 border-b border-gray-200">
                   {{ "Rp. " + formatCurrency(pay.totalPrice) }}

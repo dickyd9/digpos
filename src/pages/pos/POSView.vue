@@ -62,9 +62,9 @@
     let totalPoint = 0
 
     carts.value.forEach((cart: any) => {
-      subtotal += cart.servicesPrice * cart.amount
+      subtotal += cart.itemPrice * cart.amount
       totalItem += cart.amount
-      totalPoint += cart.servicesPoint * cart.amount
+      totalPoint += cart.itemPoint * cart.amount
     })
 
     priceMeta.value.subtotal = subtotal
@@ -111,7 +111,7 @@
     }
 
     const existingItem = carts.value.find(
-      (cartItem) => cartItem.servicesCode === item.servicesCode
+      (cartItem) => cartItem.itemCode === item.itemCode
     )
     if (existingItem) {
       // existingItem
@@ -119,10 +119,11 @@
     } else {
       // Jika item belum ada, tambahkan item baru ke dalam keranjang
       carts.value.push({
-        servicesCode: item.servicesCode,
-        servicesName: item.servicesName,
-        servicesPrice: item.servicesPrice,
-        servicesPoint: item.servicesPoint,
+        itemCode: item.itemCode,
+        itemType: item.itemType,
+        itemName: item.itemName,
+        itemPrice: item.itemPrice,
+        itemPoint: item.itemPoint,
         employeeCode: null,
         amount: 1,
       })
@@ -131,7 +132,7 @@
 
   const clearItem = (item: ICart) => {
     const index = carts.value.findIndex(
-      (itm) => itm.servicesCode === item.servicesCode
+      (itm) => itm.itemCode === item.itemCode
     )
     if (index !== -1) {
       carts.value.splice(index, 1)
@@ -211,36 +212,8 @@
   const getData = async (keyword: any) => {
     try {
       const data: IService[] = await fetchWrapper.get(`pos/menu`, { keyword })
-      const dataCategory = await fetchWrapper.get("pos/services-category")
 
-      const groupedItemsByCategory: { [key: string]: any[] } = {}
-      data.forEach((service: any) => {
-        let { servicesCategory, ...rest } = service
-
-        if (!servicesCategory) {
-          servicesCategory = "All"
-        }
-
-        if (!groupedItemsByCategory[servicesCategory]) {
-          groupedItemsByCategory[servicesCategory] = []
-        }
-        groupedItemsByCategory[servicesCategory].push(rest)
-      })
-
-      const categoriesNull = [
-        ...dataCategory.map((cat: any) => cat.categoryName),
-        "All",
-      ]
-
-      const mergedData: { categoryName: string; services: any[] }[] =
-        categoriesNull.map((category: any) => {
-          return {
-            categoryName: category,
-            services: groupedItemsByCategory[category] || [], // Gunakan data item yang sesuai dengan categoryName
-          }
-        })
-
-      tab.value = mergedData as TabMenu[]
+      tab.value = data as TabMenu[]
     } catch (error) {
       throw new Error("Gagal mengambil data")
     }
@@ -347,31 +320,28 @@
             <el-scrollbar height="60vh">
               <el-tab-pane
                 class="grid grid-cols-12 gap-5 leading-relaxed"
-                v-for="(item, index) in tab"
+                v-for="(cat, index) in tab"
                 :key="index"
-                :label="item.categoryName"
-                :name="item.categoryName">
+                :label="cat.categoryName"
+                :name="cat.categoryName">
                 <div
-                  @click="addCart(services)"
-                  v-for="(services, index) in item.services"
-                  :key="services.servicesName"
+                  @click="addCart(item)"
+                  v-for="(item, index) in cat.services"
+                  :key="item.itemName"
                   class="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3">
                   <el-tooltip
                     class="box-item"
                     effect="dark"
-                    :content="(services as any).servicesName"
+                    :content="(item as any).itemName"
                     placement="top-start">
                     <div class="flex p-3 rounded-md box zoom-in">
                       <div class="block font-medium truncate">
                         <div href="" class="font-medium whitespace-nowrap">
-                          {{ (services as any).servicesName }}
+                          {{ (item as any).itemName }}
                         </div>
                         <div
                           class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                          {{
-                            "Rp. " +
-                            formatCurrency((services as any).servicesPrice)
-                          }}
+                          {{ "Rp. " + formatCurrency((item as any).itemPrice) }}
                         </div>
                       </div>
                     </div>
