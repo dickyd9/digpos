@@ -19,6 +19,7 @@ import EmployeeRoute from "./employee.route"
 import CustomerRoute from "./customer.route"
 import { requireAuth } from "@/utils/axios/routerMiddleware"
 import POSView from "@/pages/pos/POSView.vue"
+import BookingList from "@/pages/pos/BookingList.vue"
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
         path: "/pos",
         name: "POS",
         component: POSView,
+      },
+      {
+        path: "/booking",
+        name: "BookingList",
+        component: BookingList,
       },
       ...CustomerRoute,
       ...EmployeeRoute,

@@ -105,9 +105,7 @@
                   text:
                     itemAmount +
                     " x " +
-                    (itemPrice
-                      ? "Rp. " + formatCurrency(itemPrice)
-                      : "Rp. 0"),
+                    (itemPrice ? "Rp. " + formatCurrency(itemPrice) : "Rp. 0"),
                 },
               ],
               margin: [6, 2, 0, 3],
@@ -506,13 +504,13 @@
             ORDER #{{ props?.dataPayment?.paymentCode }}
           </p>
         </div>
-        <!-- <Button
+        <Button
           @click="setInvoiceModal(true)"
           type="button"
           variant="primary"
           class="w-fit">
-          Lihat Invoice
-        </Button> -->
+          Ubah Pesanan
+        </Button>
       </Dialog.Title>
       <!-- <Dialog.Description class="flex gap-3 max-h-96 overflow-auto"> -->
       <Dialog.Description>

@@ -177,3 +177,11 @@ export interface ICart {
 export interface IConfirmCart {
   data: object[]
 }
+
+export interface IBookingList {
+  customerCode: string
+  customerData: object
+  item: object[]
+  status: string
+  createdAt: Date
+}

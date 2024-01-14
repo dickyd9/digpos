@@ -21,11 +21,11 @@ export const useSideMenuStore = defineStore("sideMenu", {
         pageName: "POS",
         title: "Menu",
       },
-      // {
-      //   icon: "Home",
-      //   pageName: "Dashboard",
-      //   title: "Dashboard",
-      // },
+      {
+        icon: "Book",
+        pageName: "BookingList",
+        title: "Booking List",
+      },
       // {
       //   icon: "User",
       //   pageName: "Karyawan",
