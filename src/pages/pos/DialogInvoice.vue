@@ -45,127 +45,30 @@
     ">
     <Dialog.Panel>
       <div class="p-4 mb-6 w-full" style="height: 80vh">
-        <div
-          style="
-                margin: 0 1rem;
-                width: 100%
-                font-size: 1.7rem;
-                font-weight: 600;
-                border-bottom: 1px dashed #0000004f;
-              "
-          class="p-3 text-center">
-          <p
-            style="
-              font-size: 1.2rem;
-              font-weight: 600;
-              border-bottom: 1px solid #00000015;
-              padding-bottom: 6px;
-            ">
-            Nova Beauty Salon & Spa
-          </p>
-          <p class="text-gray-400 font-light" style="font-size: 0.8rem">
-            Jl. Raya Cangkudu - Cisoka, Cibugel, Kec. Cisoka, Kab. Tangerang,
-            Banten - 15730
-          </p>
-        </div>
-        <div class="mt-4 mx-[1rem] grid">
-          <div class="flex justify-between">
-            <div class="font-bold">DATE</div>
-            <div class="text-end">
-              {{ formatDate(props?.dataPayment?.paymentDate, "DD MMMM YYYY") }}
+        <a
+          class="intro-x grid items-center gap-3 !box p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400">
+          <div class="flex items-center">
+            <div
+              class="text-slate-500 flex items-center h-10 rounded-lg relative bg-transparent">
+              <el-input-number
+                v-model="cart.amount"
+                :min="action.min"
+                :max="action.max"
+                :size="action.size" />
             </div>
+            <div class="max-w-[50%] truncate ml-4">
+              {{ cart.itemName }}
+            </div>
+            <div class="ml-auto font-medium">
+              Rp. {{ formatCurrency(cart.itemPrice) }}
+            </div>
+            <button class="rounded border ml-2 hover:bg-red-700">
+              <Lucide
+                icon="X"
+                class="w-4 h-4 text-slate-500 hover:text-white" />
+            </button>
           </div>
-
-          <div class="row-start-2 flex justify-between">
-            <div class="font-bold">INVOICE</div>
-            <div class="text-end">#{{ props?.dataPayment?.invoice }}</div>
-          </div>
-
-          <table class="mt-6 table-auto hover:table-fixed">
-            <tr>
-              <th class="text-start pb-2 border-b border-gray-200">No</th>
-              <th class="text-start pb-2 border-b border-gray-200">Nama</th>
-              <th class="text-start pb-2 border-b border-gray-200">Harga</th>
-              <th class="text-start pb-2 border-b border-gray-200">Item</th>
-              <th class="text-start pb-2 border-b border-gray-200">Total</th>
-            </tr>
-
-            <tr v-for="(pay, index) in props?.dataPayment?.items" key="index">
-              <td class="text-start py-2 border-b border-gray-200">
-                {{ index + 1 }}
-              </td>
-              <td class="text-start py-2 border-b border-gray-200">
-                {{ pay.itemName }}
-              </td>
-              <td class="text-start py-2 border-b border-gray-200">
-                {{ "Rp. " + formatCurrency(pay.itemPrice) }}
-              </td>
-              <td class="text-center py-2 border-b border-gray-200">
-                {{ pay.itemAmount }}
-              </td>
-              <td class="text-start py-2 border-b border-gray-200">
-                {{ "Rp. " + formatCurrency(pay.totalPrice) }}
-              </td>
-            </tr>
-
-            <tr>
-              <td class="text-start font-bold py-2 border-b border-gray-200">
-                Jumlah
-              </td>
-              <td
-                class="text-start font-bold py-2 border-b border-gray-200"></td>
-              <td
-                class="text-start font-bold py-2 border-b border-gray-200"></td>
-              <td class="text-center font-bold py-2 border-b border-gray-200">
-                {{ props.dataPayment?.totalAmount }}
-              </td>
-              <td class="text-start font-bold py-2 border-b border-gray-200">
-                {{ "Rp. " + formatCurrency(props.dataPayment?.totalPrice) }}
-              </td>
-            </tr>
-          </table>
-
-          <div
-            class="grid justify-end text-end my-6 py-3"
-            style="
-              border-bottom: 1px dashed #0000004f;
-              border-top: 1px dashed #0000004f;
-            ">
-            <div class="grid grid-cols-2 gap-3">
-              <p class="font-bold">Pembayaran :</p>
-              <p class="ml-auto">
-                {{ props.dataPayment?.paymentMethod }}
-              </p>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <p class="font-bold">Jumlah Point :</p>
-              <p class="ml-auto">
-                {{ props.dataPayment?.totalPoint }}
-              </p>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <p class="font-bold">Jumlah Bayar :</p>
-              <p class="ml-auto">
-                Rp. {{
-                  props.dataPayment?.paymentAmount === 0
-                    ? props.dataPayment?.paymentAmount
-                    : formatCurrency(props.dataPayment?.paymentAmount)
-                }}
-              </p>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <p class="font-bold">Jumlah Kembali :</p>
-              <p class="ml-auto">
-                Rp.
-                {{
-                  props?.dataPayment?.changeAmount != 0
-                    ? formatCurrency(props?.dataPayment?.changeAmount)
-                    : props?.dataPayment?.changeAmount
-                }}
-              </p>
-            </div>
-          </div>
-        </div>
+        </a>
       </div>
     </Dialog.Panel>
   </Dialog>

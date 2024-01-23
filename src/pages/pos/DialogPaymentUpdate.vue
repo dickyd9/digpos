@@ -504,13 +504,13 @@
             ORDER #{{ props?.dataPayment?.paymentCode }}
           </p>
         </div>
-        <Button
+        <!-- <Button
           @click="setInvoiceModal(true)"
           type="button"
           variant="primary"
           class="w-fit">
           Ubah Pesanan
-        </Button>
+        </Button> -->
       </Dialog.Title>
       <!-- <Dialog.Description class="flex gap-3 max-h-96 overflow-auto"> -->
       <Dialog.Description>

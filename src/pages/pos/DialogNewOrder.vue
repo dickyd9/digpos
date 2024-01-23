@@ -126,7 +126,28 @@
           window.location.reload()
         }, 2000)
       } catch (error: any) {
-        toast.error(error.response?.data.message)
+        try {
+          if (chooseCustomer.customerCode == "") {
+            toast.error("Nama Tidak boleh kosong")
+          } else {
+            const customer = await fetchWrapper.post("customer", {
+              customerName: chooseCustomer.customerCode,
+            })
+            const response = await fetchWrapper.post("transaction", {
+              customerCode: customer?.detail?.customerCode,
+            })
+            toast.success(response.message)
+            emit("close", false)
+            emit("update")
+            localStorage.setItem("paymentCreated", JSON.stringify(response))
+
+            setTimeout(() => {
+              window.location.reload()
+            }, 2000)
+          }
+        } catch (error: any) {
+          toast.error(error.response?.data.message)
+        }
       }
     } else {
       try {
@@ -190,6 +211,7 @@
                   v-model="chooseCustomer.customerCode"
                   class="w-full"
                   filterable
+                  allow-create
                   remote
                   reserve-keyword
                   placeholder="Tuliskan Nama Pelanggan ..."
@@ -201,20 +223,6 @@
                     :label="item.label"
                     :value="item.value" />
                 </el-select>
-                <!-- <TomSelect
-                  v-model="chooseCustomer.customerCode"
-                  style="border: 1px !important"
-                  :options="{
-                    placeholder: 'Select Customer',
-                  }"
-                  class="w-full">
-                  <option
-                    :value="customer.customerCode"
-                    v-for="(customer, index) in customerList"
-                    :key="index">
-                    {{ customer.customerName }}
-                  </option>
-                </TomSelect> -->
               </div>
             </Tab.Panel>
             <Tab.Panel>
