@@ -459,10 +459,10 @@
           const formData = new FormData()
           formData.append("file", blob, `${response.data?.invoice}.pdf`)
           try {
-            await fetchWrapper.post(
-              `transaction/saveInv/${response.data?.paymentCode}`,
-              formData
-            )
+            // await fetchWrapper.post(
+            //   `transaction/saveInv/${response.data?.paymentCode}`,
+            //   formData
+            // )
             setTimeout(async () => {
               window.location.reload()
             }, 2000)
